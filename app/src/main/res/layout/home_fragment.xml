@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   android:layout_width="match_parent"
+    android:background="@color/colorPrimary"
+    android:layout_height="wrap_content">
+  <RelativeLayout
+      android:layout_marginTop="60sp"
+      android:id="@+id/recently_played_title"
+      android:layout_width="match_parent"
+      android:layout_height="52dp"
+      android:background="@color/colorMediumDarker">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+      android:layout_centerInParent="true"
+      android:background="@color/colorMedium">
+    </View>
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_marginStart="15sp"
+          android:text="Recently played"/>
+  </RelativeLayout>
+
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/recently_played_list"
+      android:layout_width="match_parent"
+      android:layout_height="190dp"
+      android:layout_below="@id/recently_played_title"
+      android:layout_marginTop="0dp">
+
+  </androidx.recyclerview.widget.RecyclerView>
+    <RelativeLayout
+        android:id="@+id/palylist_title"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_below="@id/recently_played_list"
+        android:background="@color/colorMediumDarker">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:layout_centerInParent="true"
+            android:background="@color/colorMedium">
+        </View>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="15sp"
+            android:text="Playlists"/>
+    </RelativeLayout>
+    <Button
+    android:layout_width="match_parent"
+    android:layout_height="50sp"
+    android:id="@+id/refresh"
+    android:text="Set"
+    android:layout_below="@id/palylist_title"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:id="@+id/refresh2"
+        android:text="Refresh"
+        android:layout_below="@id/refresh"/>
+</RelativeLayout>
