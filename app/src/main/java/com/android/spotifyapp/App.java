@@ -5,7 +5,6 @@ import android.app.Application;
 
 import com.android.spotifyapp.di.components.AppComponent;
 import com.android.spotifyapp.di.components.DaggerAppComponent;
-import com.android.spotifyapp.di.modules.AppModule;
 
 public class App extends Application {
     public static App get(Activity activity) {

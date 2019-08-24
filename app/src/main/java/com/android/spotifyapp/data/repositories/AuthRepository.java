@@ -5,14 +5,11 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.android.spotifyapp.data.network.model.AccessToken;
 import com.android.spotifyapp.data.network.services.AuthService;
-
-
 import com.android.spotifyapp.di.components.DaggerLoginComponent;
 import com.android.spotifyapp.di.components.LoginComponent;
 import com.android.spotifyapp.di.qualifiers.AuthQualifier;
 
 import javax.inject.Inject;
-
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;

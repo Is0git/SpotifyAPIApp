@@ -42,7 +42,7 @@ public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHo
                 .into(holder.album_image, new Callback() {
                     @Override
                     public void onSuccess() {
-                            ProgressBar.progressBarUnvisible(holder.progressBar);
+//                            ProgressBar.progressBarUnvisible(holder.progressBar);
                     }
 
                     @Override

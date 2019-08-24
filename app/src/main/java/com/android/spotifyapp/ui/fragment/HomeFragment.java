@@ -1,90 +1,80 @@
 package com.android.spotifyapp.ui.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.android.spotifyapp.App;
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.ViewModels.HomeViewModel;
-import com.android.spotifyapp.data.network.model.RecentlyPlayed;
-import com.android.spotifyapp.di.components.AppComponent;
-import com.android.spotifyapp.di.components.DaggerAppComponent;
+import com.android.spotifyapp.data.ViewModels.MyPlaylistViewModel;
+import com.android.spotifyapp.data.network.model.MyPlaylist;
 import com.android.spotifyapp.di.components.DaggerHomeComponent;
 import com.android.spotifyapp.di.components.HomeComponent;
-import com.android.spotifyapp.di.modules.AppModule;
-import com.android.spotifyapp.di.modules.ContextModule;
 import com.android.spotifyapp.di.modules.HorizontalRecyclerView;
-import com.android.spotifyapp.di.qualifiers.HomeHorizontalAdapter;
-import com.android.spotifyapp.ui.activities.BaseActivity;
+import com.android.spotifyapp.di.modules.ViewModelsModule;
+import com.android.spotifyapp.di.qualifiers.MyPlaylistListQualifier;
+import com.android.spotifyapp.di.qualifiers.RecentlyPlayedQualifier;
 import com.android.spotifyapp.ui.adapters.HomeHorizontal;
-
+import com.android.spotifyapp.ui.adapters.MyPlaylistsAdapter;
 import java.util.Objects;
-
 import javax.inject.Inject;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import static com.android.spotifyapp.utils.SpotifyAuthContract.ACCESS_TOKEN;
 
-import retrofit2.Retrofit;
 
-import static com.android.spotifyapp.utils.TAGS.TAG;
 
 public class HomeFragment extends Fragment {
-    @Inject
-    RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
-    HomeViewModel homeViewModel;
-    View view;
-    Button refresh;
-    Button refresh2;
+    @Inject @RecentlyPlayedQualifier RecyclerView recyclerView;
+    @Inject @MyPlaylistListQualifier RecyclerView MyPlaylistRecyclerView;
 
+    @Inject HomeHorizontal homeHorizontal;
+    @Inject MyPlaylistsAdapter myPlaylistsAdapter;
+
+    @Inject HomeViewModel homeViewModel;
+    @Inject MyPlaylistViewModel myPlaylistViewModel;
+
+    View view;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.home_fragment, container, false);
-        refresh = view.findViewById(R.id.refresh);
-        refresh2 = view.findViewById(R.id.refresh2);
+        ButterKnife.bind(this, view);
+
+        //Dagger
         HomeComponent component = DaggerHomeComponent.builder()
                 .horizontalRecyclerView(new HorizontalRecyclerView(view))
                 .appComponent(App.get(Objects.requireNonNull(this.getActivity())).getAppComponent())
+                .viewModelsModule(new ViewModelsModule(this))
                 .build();
-        recyclerView = component.getList();
-        adapter = component.getAdapter();
-        final HomeHorizontal homeHorizontal = new HomeHorizontal();
+        component.injectFragment(this);
+
+        //Recently played list
         recyclerView.setAdapter(homeHorizontal);
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
-        homeViewModel.getRecentlyPlayedLiveData().observe(this, new Observer<RecentlyPlayed>() {
-            @Override
-            public void onChanged(RecentlyPlayed recentlyPlayed) {
-                Log.d("REFRESH", "START: " );
-                homeHorizontal.UpdateData(recentlyPlayed);
+        homeViewModel.getRecentlyPlayedLiveData().observe(this, recentlyPlayed -> homeHorizontal.UpdateData(recentlyPlayed));
 
-
-            }
-        });
-        refresh.setOnClickListener(new View.OnClickListener() {
+        //MyPlaylist List
+        MyPlaylistRecyclerView.setAdapter(myPlaylistsAdapter);
+        myPlaylistViewModel.getMyPlaylistLiveData("Bearer " + ACCESS_TOKEN).observe(this, new Observer<MyPlaylist>() {
             @Override
-            public void onClick(View view) {
-                homeViewModel.setData();
-            }
-        });
-        refresh2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                homeViewModel.refresh();
+            public void onChanged(MyPlaylist myPlaylist) {
+                myPlaylistsAdapter.UpdateList(myPlaylist);
             }
         });
         return view;
+    }
+
+    @OnClick(R.id.refresh2) void click() {
+        homeViewModel.refresh();
+    }
+    @OnClick(R.id.refresh) void click2() {
+        homeViewModel.setData();
     }
 }

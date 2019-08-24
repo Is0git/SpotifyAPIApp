@@ -2,7 +2,6 @@ package com.android.spotifyapp.data.network.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.security.acl.Owner;
 import java.util.List;
 
 public class MyPlaylist {

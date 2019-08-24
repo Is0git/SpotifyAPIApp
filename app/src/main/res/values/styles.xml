@@ -6,9 +6,13 @@
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowTranslucentStatus">true</item>
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="actionBarSize">35sp</item>
+        <item name="titleTextColor">@color/colorPrimaryDark</item>
+        <item name="subtitleTextColor">@color/colorPrimaryDark</item>
+
 
     </style>
 

@@ -1,11 +1,11 @@
 package com.android.spotifyapp.ui.activities;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
-import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.ui.fragment.HomeFragment;

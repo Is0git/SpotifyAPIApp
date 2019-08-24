@@ -1,13 +1,9 @@
 package com.android.spotifyapp.di.modules;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
 
 import com.android.spotifyapp.di.qualifiers.ActivityContext;
 import com.android.spotifyapp.di.scopes.HomeFragmentScope;
-
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;

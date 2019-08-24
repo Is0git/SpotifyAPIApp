@@ -1,6 +1,5 @@
 package com.android.spotifyapp.ui.activities;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,18 +8,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.ViewModels.AuthViewModel;
 import com.android.spotifyapp.data.ViewModels.MyPlaylistViewModel;
 import com.android.spotifyapp.data.network.model.AccessToken;
 import com.android.spotifyapp.data.network.model.MyPlaylist;
 import com.jakewharton.rxbinding3.view.RxView;
+
 import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import kotlin.Unit;
+
 import static com.android.spotifyapp.utils.ProgressBar.progressBarUnvisible;
 import static com.android.spotifyapp.utils.ProgressBar.progressBarVisible;
 import static com.android.spotifyapp.utils.SpotifyAuthContract.ACCESS_TOKEN;
