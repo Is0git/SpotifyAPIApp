@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
@@ -28,10 +29,14 @@ public class BaseRepository {
     @Inject
     @RetrofitQualifier
     Retrofit retrofit;
-    UserService userService;
-    MutableLiveData<User> mutableLiveData;
+    private UserService userService;
+    private MutableLiveData<User> mutableLiveData;
+    private CompositeDisposable compositeDisposable;
     private static BaseRepository baseRepository_instance;
-    private BaseRepository() {mutableLiveData = new MutableLiveData<>(); }
+    private BaseRepository() {
+        mutableLiveData = new MutableLiveData<>();
+        compositeDisposable = new CompositeDisposable();
+    }
 
     public static BaseRepository getInstance() {
         if(baseRepository_instance == null) {
@@ -79,5 +84,7 @@ public class BaseRepository {
                 });
         return this.mutableLiveData;
     }
-
+    public CompositeDisposable getDisposables() {
+        return compositeDisposable;
+    }
 }

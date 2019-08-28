@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
@@ -28,7 +29,8 @@ public class AuthRepository {
             @AuthQualifier
     Retrofit retrofit;
     private static AuthRepository authRepository_instance = null;
-    private AuthRepository(){}
+    private CompositeDisposable compositeDisposable;
+    private AuthRepository(){compositeDisposable = new CompositeDisposable();}
     public static AuthRepository getInstance() {
 
         if(authRepository_instance == null) {
@@ -69,5 +71,7 @@ public class AuthRepository {
 
         return access_data;
     }
-
+    public CompositeDisposable getDisposables() {
+        return compositeDisposable;
+    }
 }

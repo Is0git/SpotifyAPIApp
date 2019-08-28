@@ -40,4 +40,10 @@ public class HomeViewModel extends AndroidViewModel {
         userTopTracksMutableLiveData = homeRepository.getUserTopTracks(limit);
         return userTopTracksMutableLiveData;
     }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        homeRepository.getDisposables().clear();
+    }
 }

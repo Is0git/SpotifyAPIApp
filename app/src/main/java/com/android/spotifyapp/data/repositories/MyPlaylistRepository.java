@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
@@ -26,8 +27,9 @@ public class MyPlaylistRepository {
             @RetrofitQualifier
     Retrofit retrofit;
     String TAG = "GETPLAYLIST";
+    private CompositeDisposable compositeDisposable;
     private static MyPlaylistRepository myPlaylistRepository_instance = null;
-    private MyPlaylistRepository() {}
+    private MyPlaylistRepository() {compositeDisposable = new CompositeDisposable();}
     public static MyPlaylistRepository getInstance() {
         if(myPlaylistRepository_instance == null) {
             myPlaylistRepository_instance = new MyPlaylistRepository();
@@ -67,5 +69,8 @@ public class MyPlaylistRepository {
                     }
                 });
         return myPlaylistMutableLiveData;
+    }
+    public CompositeDisposable getDisposables() {
+        return compositeDisposable;
     }
 }

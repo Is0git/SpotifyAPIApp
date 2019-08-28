@@ -23,4 +23,10 @@ public class BaseViewModel extends AndroidViewModel {
         mutableLiveData = baseRepository.getUser();
         return mutableLiveData;
     }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        baseRepository.getDisposables().clear();
+    }
 }

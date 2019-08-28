@@ -61,7 +61,7 @@
             android:textStyle="bold"
             android:textColor="@color/colorBlack"
             android:fontFamily="@font/myriadpro"
-            android:text="ARTIST"/>
+            android:text="@string/artist"/>
         <TextView
             android:id="@+id/followers"
             android:layout_width="match_parent"
@@ -72,6 +72,6 @@
             android:textAlignment="center"
             android:layout_below="@id/artist_name2"
             android:textColor="@color/colorLightGrey"
-            android:text="@string/followers"/>
+            android:text="@string/followersString"/>
     </RelativeLayout>
 </RelativeLayout>

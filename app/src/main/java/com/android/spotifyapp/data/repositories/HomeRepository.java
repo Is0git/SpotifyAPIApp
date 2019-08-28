@@ -28,6 +28,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -42,11 +43,15 @@ public class HomeRepository {
     @Inject
     @RetrofitQualifier
     Retrofit retrofit;
-    HomeService homeService;
-    MutableLiveData<UserTopTracks> userTopTracksMutableLiveData;
+    private HomeService homeService;
+    private MutableLiveData<UserTopTracks> userTopTracksMutableLiveData;
     private Recommendations recommendationsHelper;
+    private CompositeDisposable compositeDisposable;
     private static HomeRepository homeRepository_instance;
-    private HomeRepository() {userTopTracksMutableLiveData = new MutableLiveData<>();}
+    private HomeRepository() {
+        userTopTracksMutableLiveData = new MutableLiveData<>();
+        compositeDisposable = new CompositeDisposable();
+    }
     public static HomeRepository getInstance() {
         if(homeRepository_instance == null) {
             homeRepository_instance = new HomeRepository();
@@ -72,6 +77,7 @@ public class HomeRepository {
                     @Override
                     public void onSubscribe(Disposable d) {
                         Log.d("SUBGOT", "onSubscribe: Recents");
+                        compositeDisposable.add(d);
                     }
 
                     @Override
@@ -109,7 +115,7 @@ public class HomeRepository {
                 .subscribe(new Observer<RecentlyPlayed>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        compositeDisposable.add(d);
                     }
 
                     @Override
@@ -141,7 +147,7 @@ public class HomeRepository {
                 .subscribe(new Observer<Recommendations.Tracks>() {
             @Override
             public void onSubscribe(Disposable d) {
-
+                compositeDisposable.add(d);
             }
 
             @Override
@@ -188,7 +194,7 @@ public class HomeRepository {
                 .subscribe(new Observer<UserTopTracks>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        compositeDisposable.add(d);
                     }
 
                     @Override
@@ -208,5 +214,8 @@ public class HomeRepository {
                     }
                 });
         return userTopTracksMutableLiveData;
+    }
+    public CompositeDisposable getDisposables() {
+        return compositeDisposable;
     }
 }

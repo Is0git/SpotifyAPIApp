@@ -20,4 +20,10 @@ public class MyPlaylistViewModel extends AndroidViewModel {
         this.myPlaylistLiveData = myPlaylistRepository.getMyPlaylist(access_token);
         return myPlaylistLiveData;
     }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        myPlaylistRepository.getDisposables().clear();
+    }
 }

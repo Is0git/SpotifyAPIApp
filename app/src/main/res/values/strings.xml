@@ -8,4 +8,6 @@
     <string name="playlist_items">%1$d items</string>
     <string name="followers">%1$d Followers</string>
     <string name="items">%1$d ITEMS</string>
+    <string name="followersString">followers</string>
+    <string name="artist">ARTIST</string>
 </resources>

@@ -22,4 +22,9 @@ public class AuthViewModel extends AndroidViewModel {
         return data;
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        authRepository.getDisposables().clear();
+    }
 }
