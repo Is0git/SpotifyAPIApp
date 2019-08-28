@@ -39,17 +39,18 @@ public class MyPlaylistRepository {
         MyplaylistComponent myplaylistComponent = DaggerMyplaylistComponent.create();
         myplaylistComponent.inject(this);
         MyPlaylistService myPlaylistService =  retrofit.create(MyPlaylistService.class);
-        Observable<MyPlaylist> observable = myPlaylistService.getMyPlaylist(access_token);
-        observable.observeOn(AndroidSchedulers.mainThread())
+        Observable<MyPlaylist> observable2 = myPlaylistService.getMyPlaylist(access_token);
+        observable2.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<MyPlaylist>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        Log.d("SUBGOT", "onSubscribe: playlist");
                     }
 
                     @Override
                     public void onNext(MyPlaylist myPlaylist) {
+                        Log.d("GOTCHA", "onMyPlaylist: " + myPlaylist.getMitems().size());
                     myPlaylistMutableLiveData.setValue(myPlaylist);
                         Log.d(TAG, "onNext: " + myPlaylist.getTotal());
                     }

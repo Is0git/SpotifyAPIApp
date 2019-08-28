@@ -1,4 +1,4 @@
-package com.android.spotifyapp.ui.adapters;
+package com.android.spotifyapp.ui.adapters.Home;
 
 import android.util.Log;
 import android.view.LayoutInflater;

@@ -10,13 +10,23 @@ public class Recommendations {
     @SerializedName("seeds")
     private List<Seeds> mseeds;
 
-    private static class Tracks {
+
+    public List<Tracks> getMtracks() {
+        return mtracks;
+    }
+
+    public List<Seeds> getMseeds() {
+        return mseeds;
+    }
+
+    public static class Tracks {
         @SerializedName("album")
         private Album album;
         @SerializedName("artists")
         private List<Artists> martists;
         private int disc_number;
-        private int duraiton_ms;
+        private Artist artist;
+        private int duration_ms;
         private boolean explicit;
         @SerializedName("external_ids")
         private External_ids external_ids;
@@ -33,6 +43,14 @@ public class Recommendations {
         private String type;
         private String uri;
 
+        public void setArtist(Artist artist) {
+            this.artist = artist;
+        }
+
+        public Artist getArtist() {
+            return artist;
+        }
+
         public Album getAlbum() {
             return album;
         }
@@ -45,8 +63,8 @@ public class Recommendations {
             return disc_number;
         }
 
-        public int getDuraiton_ms() {
-            return duraiton_ms;
+        public int getDuration_ms() {
+            return duration_ms;
         }
 
         public boolean isExplicit() {
@@ -101,7 +119,7 @@ public class Recommendations {
             return uri;
         }
     }
-    private static class Album {
+    public static class Album {
         private String album_type;
         @SerializedName("artists")
         private List<Artists> martists;
@@ -166,21 +184,21 @@ public class Recommendations {
             return uri;
         }
     }
-    private static class External_urls {
+    public static class External_urls {
         private String spotify;
 
         public String getSpotify() {
             return spotify;
         }
     }
-    private static class External_ids {
+    public static class External_ids {
         private String isrc;
 
         public String getIsrc() {
             return isrc;
         }
     }
-    private static class Images {
+    public static class Images {
         private int height;
         private String url;
         private int width;
@@ -197,7 +215,7 @@ public class Recommendations {
             return width;
         }
     }
-    private static class Artists {
+    public static class Artists {
         private External_urls external_urls;
         private String href;
         private String id;
@@ -229,7 +247,7 @@ public class Recommendations {
             return uri;
         }
     }
-    private static class Seeds {
+    public static class Seeds {
         private int initialPoolSize;
         private int afterFilteringSize;
         private int afterRelinkingSize;

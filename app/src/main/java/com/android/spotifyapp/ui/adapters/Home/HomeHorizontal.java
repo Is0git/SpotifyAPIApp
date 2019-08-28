@@ -1,25 +1,23 @@
-package com.android.spotifyapp.ui.adapters;
+package com.android.spotifyapp.ui.adapters.Home;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.network.model.RecentlyPlayed;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.android.spotifyapp.utils.ProgressBar;
 
-import org.w3c.dom.Text;
-
 public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHolder> {
     private RecentlyPlayed recentlyPlayed;
     private View view;
+    private android.widget.ProgressBar progressBar;
     public HomeHorizontal() {
         recentlyPlayed = new RecentlyPlayed();
     }
@@ -36,6 +34,7 @@ public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHo
             holder.song_name.setText(recentlyPlayed.getMitems().get(position).getTrack().getName());
             holder.artist_name.setText(recentlyPlayed.getMitems().get(position).getTrack().getArtists().get(0).getName());
             ProgressBar.progressBarVisible(holder.progressBar);
+
         Picasso.with(view.getContext())
                 .load(recentlyPlayed.getMitems().get(position).getTrack().getAlbums().getImages().get(0).getUrl())
                 .fit()
@@ -43,6 +42,7 @@ public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHo
                     @Override
                     public void onSuccess() {
 //                            ProgressBar.progressBarUnvisible(holder.progressBar);
+                        Log.d("IMAGE", "onBindViewHolder: END");
                     }
 
                     @Override

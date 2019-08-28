@@ -15,8 +15,11 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="55sp"
+        android:layout_height="45sp"
         android:layout_alignParentBottom="true"
+        app:itemIconTint="@color/bottomnavselector"
+        app:itemIconSize="27dp"
+        app:labelVisibilityMode="unlabeled"
         app:menu="@menu/nav_menu">
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 

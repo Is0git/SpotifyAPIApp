@@ -19,12 +19,6 @@ import dagger.Component;
 @Component(modules = {HorizontalRecyclerView.class, AdaptersModule.class, ViewModelsModule.class}, dependencies = {AppComponent.class})
 
 public interface HomeComponent {
-    @RecentlyPlayedQualifier
-    RecyclerView getList();
-    @MyPlaylistListQualifier
-    RecyclerView getPlaylistList();
-    @HomeHorizontalAdapter
-    RecyclerView.Adapter getAdapter();
     void inject(HomeRepository homeRepository);
     void injectFragment(HomeFragment homeFragment);
 

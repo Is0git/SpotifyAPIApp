@@ -19,7 +19,7 @@
             android:id="@+id/album_image"
             android:layout_width="99dp"
             android:layout_height="100dp"
-            android:background="#000000" />
+            android:background="@drawable/image_placeholder" />
         </androidx.cardview.widget.CardView>
 
     <com.github.ybq.android.spinkit.SpinKitView
@@ -29,7 +29,7 @@
         android:layout_height="85dp"
         android:duplicateParentState="true"
         android:layout_marginTop="20dp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:SpinKit_Color="@color/colorAccent"
         android:layout_centerInParent="true" />
     </RelativeLayout>
@@ -39,8 +39,8 @@
         android:textColor="@color/colorSongName"
         android:fontFamily="@font/myriadpro"
         android:layout_centerHorizontal="true"
-        android:height="11sp"
-        android:textSize="11sp"
+        android:height="14sp"
+        android:textSize="12sp"
         android:layout_below="@id/image_layout"
         android:layout_alignStart="@id/image_layout"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
         android:textColor="@color/colorArtist"
         android:id="@+id/artist_name"
         android:layout_width="85sp"
-        android:layout_height="11sp"
+        android:layout_height="13sp"
         android:layout_below="@id/song_name"
         android:layout_alignStart="@id/image_layout"
         android:textSize="11sp"

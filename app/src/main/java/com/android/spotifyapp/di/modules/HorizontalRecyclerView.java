@@ -8,7 +8,8 @@ import com.android.spotifyapp.R;
 import com.android.spotifyapp.di.qualifiers.HomeHorizontalAdapter;
 import com.android.spotifyapp.di.qualifiers.MyPlaylistListQualifier;
 import com.android.spotifyapp.di.qualifiers.RecentlyPlayedQualifier;
-import com.android.spotifyapp.ui.adapters.HomeHorizontal;
+import com.android.spotifyapp.di.qualifiers.RecommendedListQualifier;
+import com.android.spotifyapp.ui.adapters.Home.HomeHorizontal;
 import dagger.Module;
 import dagger.Provides;
 
@@ -24,19 +25,15 @@ public class HorizontalRecyclerView {
     RecyclerView.LayoutManager layoutManager() {
         return new LinearLayoutManager(view.getContext(), RecyclerView.HORIZONTAL, false);
     }
-    @Provides
-    @HomeHorizontalAdapter
-        RecyclerView.Adapter adapter() {
-        return new HomeHorizontal();
-    }
+
+
     @Provides
     @RecentlyPlayedQualifier
-    RecyclerView recyclerView(RecyclerView.LayoutManager layoutManager, @HomeHorizontalAdapter RecyclerView.Adapter adapter) {
+    RecyclerView recyclerView(RecyclerView.LayoutManager layoutManager) {
         RecyclerView recyclerView;
         recyclerView = view.findViewById(R.id.recently_played_list);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
         return recyclerView;
     }
     @Provides
@@ -49,5 +46,14 @@ public class HorizontalRecyclerView {
         return recyclerView;
     }
 
+    @Provides
+    @RecommendedListQualifier
+    RecyclerView RecommendedRecyclerView(RecyclerView.LayoutManager layoutManager) {
+        RecyclerView recyclerView;
+        recyclerView = view.findViewById(R.id.recommended_list);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        return recyclerView;
+    }
 
 }

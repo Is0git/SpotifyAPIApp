@@ -1,40 +1,78 @@
 package com.android.spotifyapp.ui.activities;
 
 import android.os.Bundle;
-import android.view.MenuItem;
-
-import androidx.annotation.NonNull;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
+import androidx.lifecycle.Observer;
+import com.android.spotifyapp.App;
 import com.android.spotifyapp.R;
+import com.android.spotifyapp.data.ViewModels.BaseViewModel;
+import com.android.spotifyapp.data.network.model.User;
+import com.android.spotifyapp.di.components.BaseComponent;
+import com.android.spotifyapp.di.components.DaggerBaseComponent;
+import com.android.spotifyapp.di.modules.ActivityViewModelModule;
 import com.android.spotifyapp.ui.fragment.HomeFragment;
 import com.android.spotifyapp.ui.fragment.PlaylistFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.squareup.picasso.Picasso;
+import java.util.Objects;
+import javax.inject.Inject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.android.spotifyapp.utils.ActionBarSettings.SetActionBar;
 
 public class BaseActivity extends AppCompatActivity {
-    BottomNavigationView bottomNavigationView;
+    @BindView(R.id.bottom_nav) BottomNavigationView bottomNavigationView;
+    ImageView user_image;
+    @Inject BaseViewModel viewModel;
+    View actionbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_activity);
-        bottomNavigationView = findViewById(R.id.bottom_nav);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment current = null;
-                switch(menuItem.getItemId()) {
-                    case R.id.home:
-                        current = new HomeFragment();
-                        break;
-                    case R.id.my_playlists:
-                        current = new PlaylistFragment();
+        ButterKnife.bind(this);
+        //ActionBar
+        actionbar  = LayoutInflater.from(this).inflate(R.layout.actionbar, null);
+        SetActionBar(this, actionbar);
+        user_image = actionbar.findViewById(R.id.action_user);
+        //Dagger
+        BaseComponent component = DaggerBaseComponent.builder().appComponent(App.get(Objects.requireNonNull(this))
+                .getAppComponent())
+                .activityViewModelModule(new ActivityViewModelModule(this))
+                .build();
+        component.injectActivity(this);
 
-                }
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, current).commit();
-                return true;
+        viewModel.getUser().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+
+                Log.d("BASETAG", "onChangeds: " + user_image);
+                Picasso.with(getApplicationContext())
+                        .load(user.getMimages().get(0).getUrl())
+                        .fit().into(user_image);
             }
         });
+
+        //Fragments
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
+            Fragment current = null;
+            switch(menuItem.getItemId()) {
+                case R.id.home:
+                    current = new HomeFragment();
+                    break;
+                case R.id.my_playlists:
+                    current = new PlaylistFragment();
+
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, current).commit();
+            return true;
+        });
+
     }
 }

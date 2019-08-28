@@ -8,4 +8,6 @@
     <color name="colorTitle" >#222222</color>
     <color name="colorSongName" >#222222</color>
     <color name="colorArtist">#424242</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorLightGrey">#cfcfcf</color>
 </resources>

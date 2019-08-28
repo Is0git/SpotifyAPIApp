@@ -5,5 +5,7 @@
     <string name="search">Search</string>
     <string name="song_name">Song_NAME</string>
     <string name="artist_name">Artist_NAME</string>
-    <string name="playlist_items">%1$ditems</string>
+    <string name="playlist_items">%1$d items</string>
+    <string name="followers">%1$d Followers</string>
+    <string name="items">%1$d ITEMS</string>
 </resources>

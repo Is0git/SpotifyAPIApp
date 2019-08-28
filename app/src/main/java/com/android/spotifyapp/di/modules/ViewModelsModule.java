@@ -2,6 +2,7 @@ package com.android.spotifyapp.di.modules;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import com.android.spotifyapp.data.ViewModels.BaseViewModel;
 import com.android.spotifyapp.data.ViewModels.HomeViewModel;
 import com.android.spotifyapp.data.ViewModels.MyPlaylistViewModel;
 import com.android.spotifyapp.ui.fragment.HomeFragment;
@@ -27,4 +28,5 @@ public class ViewModelsModule {
         return ViewModelProviders.of(homeFragment).get(MyPlaylistViewModel.class);
 
     }
+
 }
