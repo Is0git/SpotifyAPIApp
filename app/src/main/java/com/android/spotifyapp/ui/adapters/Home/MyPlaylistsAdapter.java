@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.network.model.MyPlaylist;
 import com.squareup.picasso.Callback;

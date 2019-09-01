@@ -4,12 +4,12 @@ import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.spotifyapp.R;
-import com.android.spotifyapp.di.qualifiers.HomeHorizontalAdapter;
 import com.android.spotifyapp.di.qualifiers.MyPlaylistListQualifier;
 import com.android.spotifyapp.di.qualifiers.RecentlyPlayedQualifier;
 import com.android.spotifyapp.di.qualifiers.RecommendedListQualifier;
-import com.android.spotifyapp.ui.adapters.Home.HomeHorizontal;
+
 import dagger.Module;
 import dagger.Provides;
 

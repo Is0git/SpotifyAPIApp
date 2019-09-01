@@ -1,7 +1,5 @@
 package com.android.spotifyapp.data.network.model;
 
-import android.media.Image;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

@@ -6,13 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.network.model.RecentlyPlayed;
+import com.android.spotifyapp.utils.ProgressBar;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.android.spotifyapp.utils.ProgressBar;
 
 public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHolder> {
     private RecentlyPlayed recentlyPlayed;

@@ -8,7 +8,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.spotifyapp.R;
-import com.android.spotifyapp.data.network.model.RecentlyPlayed;
 import com.android.spotifyapp.data.network.model.UserTopTracks;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 import com.squareup.picasso.Callback;

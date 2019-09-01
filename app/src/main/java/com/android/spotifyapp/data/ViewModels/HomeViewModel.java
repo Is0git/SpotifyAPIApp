@@ -1,10 +1,12 @@
 package com.android.spotifyapp.data.ViewModels;
 
 import android.app.Application;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import com.android.spotifyapp.data.network.model.RecentlyPlayed;
 import com.android.spotifyapp.data.network.model.Recommendations;
 import com.android.spotifyapp.data.network.model.UserTopTracks;

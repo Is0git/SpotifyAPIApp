@@ -6,10 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.spotifyapp.App;
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.ViewModels.HomeViewModel;
@@ -27,10 +29,14 @@ import com.android.spotifyapp.ui.adapters.Home.RecommendedAdapter;
 import com.android.spotifyapp.ui.adapters.Home.SliderAdapter;
 import com.android.spotifyapp.utils.CheckProgressBar;
 import com.smarteist.autoimageslider.SliderView;
+
 import java.util.Objects;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 import static com.android.spotifyapp.utils.SpotifyAuthContract.ACCESS_TOKEN;
 
 

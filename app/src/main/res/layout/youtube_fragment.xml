@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="70dp">
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+        android:id="@+id/youtube_player_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:videoId="S9e_INLnJts"
+        app:autoPlay="true"
+        app:showSeekBar="false"
+        app:showYouTubeButton="false"
+        app:showVideoCurrentTime="false"
+        app:showVideoDuration="false"
+        android:clickable="false"
+        app:showFullScreenButton="false" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/song_progress_bar">
+
+        <ImageView
+            android:id="@+id/backwards_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/backwards_icon" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/play_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:layout_toEndOf="@id/backwards_icon"
+            app:cardBackgroundColor="@color/colorAccent"
+            app:cardCornerRadius="25sp">
+
+        <ImageView
+            android:id="@+id/player_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_play_arrow_black_24dp">
+        </ImageView>
+        </androidx.cardview.widget.CardView>
+        <ImageView
+            android:id="@+id/forward_icon"
+            android:layout_centerInParent="true"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="30dp"
+            android:background="@drawable/forward_icon"
+            android:layout_toEndOf="@id/play_button"/>
+
+
+</RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/song_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="17dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="-7dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498" />
+</RelativeLayout>

@@ -9,13 +9,19 @@
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/bottom_nav">
-
+            android:layout_above="@id/youtube_fragment">
         </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_nav"
+        android:id="@+id/youtube_fragment"/>
+
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="45sp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:itemIconTint="@color/bottomnavselector"
         app:itemIconSize="27dp"

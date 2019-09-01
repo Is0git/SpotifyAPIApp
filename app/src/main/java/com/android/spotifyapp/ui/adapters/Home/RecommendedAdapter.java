@@ -1,7 +1,5 @@
 package com.android.spotifyapp.ui.adapters.Home;
 
-import android.media.Image;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.network.model.Recommendations;
-import com.android.spotifyapp.utils.ProgressBar;
 import com.squareup.picasso.Picasso;
-
-import static com.android.spotifyapp.utils.TAGS.TAG2;
 
 public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.MyViewHolder> {
     private Recommendations recommendations;

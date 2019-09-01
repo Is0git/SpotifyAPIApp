@@ -5,7 +5,6 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.android.spotifyapp.data.network.model.Artist;
 import com.android.spotifyapp.data.network.model.RecentlyPlayed;
 import com.android.spotifyapp.data.network.model.Recommendations;
 import com.android.spotifyapp.data.network.model.UserTopTracks;
@@ -14,16 +13,12 @@ import com.android.spotifyapp.di.components.AppComponent;
 import com.android.spotifyapp.di.components.DaggerAppComponent;
 import com.android.spotifyapp.di.components.DaggerHomeComponent;
 import com.android.spotifyapp.di.components.HomeComponent;
-import com.android.spotifyapp.di.modules.AdaptersModule;
 import com.android.spotifyapp.di.modules.HorizontalRecyclerView;
 import com.android.spotifyapp.di.modules.ViewModelsModule;
 import com.android.spotifyapp.di.qualifiers.RetrofitQualifier;
-import com.android.spotifyapp.ui.adapters.Home.RecommendedAdapter;
-import com.android.spotifyapp.utils.TAGS;
-
-import java.util.List;
 
 import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
@@ -36,7 +31,6 @@ import retrofit2.Retrofit;
 
 import static com.android.spotifyapp.utils.SpotifyAuthContract.ACCESS_TOKEN;
 import static com.android.spotifyapp.utils.TAGS.TAG;
-import static com.android.spotifyapp.utils.TAGS.TAG2;
 import static com.android.spotifyapp.utils.TAGS.TAG4;
 
 public class HomeRepository {

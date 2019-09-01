@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -16,7 +15,6 @@ import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.ViewModels.AuthViewModel;
 import com.android.spotifyapp.data.ViewModels.MyPlaylistViewModel;
 import com.android.spotifyapp.data.network.model.AccessToken;
-import com.android.spotifyapp.data.network.model.MyPlaylist;
 import com.jakewharton.rxbinding3.view.RxView;
 
 import java.util.concurrent.TimeUnit;
@@ -40,6 +38,9 @@ public class AuthActivity extends AppCompatActivity {
     AuthViewModel authViewModel;
     MyPlaylistViewModel myPlaylistViewModel;
     AccessToken maccessToken;
+
+
+
     public final String TAG = "MIN";
     private CompositeDisposable disposables = new CompositeDisposable();
     @Override
@@ -48,28 +49,26 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_auth);
 
         login = findViewById(R.id.redirectbtn);
-        button = findViewById(R.id.button);
+
 
         progressBar = findViewById(R.id.progressBar);
 
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
         myPlaylistViewModel = ViewModelProviders.of(this).get(MyPlaylistViewModel.class);
 
-
-        button.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                myPlaylistViewModel.getMyPlaylistLiveData(maccessToken.getToken_type() + " " + maccessToken.getAccess_token()).observe(AuthActivity.this, new androidx.lifecycle.Observer<MyPlaylist>() {
-                    @Override
-                    public void onChanged(MyPlaylist myPlaylist) {
-                        Toast.makeText(AuthActivity.this, "RES " + myPlaylist.getTotal(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            }
-        });
+//        listener = new YouTubePlayer.OnInitializedListener() {
+//            @Override
+//            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+//                youTubePlayer.loadVideo("XKxwV1ETTfc");
+//            }
+//
+//            @Override
+//            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+//
+//            }
+//        };
+//
+//        youTubePlayerView.initialize(YoutubeAPIContract.getApiKey(), listener);
 
         RxView.clicks(login)
                 .throttleFirst(10000, TimeUnit.MILLISECONDS)
