@@ -1,6 +1,7 @@
 package com.android.spotifyapp.ui.adapters.Home;
 
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class MyPlaylistsAdapter extends RecyclerView.Adapter<MyPlaylistsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull final MyPlaylistsAdapter.MyViewHolder holder, int position) {
+        holder.itemView.setLongClickable(true);
         if(myPlaylist.getMitems().get(position).getMimages().size() > 0) {
             com.android.spotifyapp.utils.ProgressBar.progressBarVisible(holder.progressBar);
             Picasso.with(view.getContext())
@@ -75,7 +77,7 @@ public class MyPlaylistsAdapter extends RecyclerView.Adapter<MyPlaylistsAdapter.
         notifyDataSetChanged();
 
     }
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder  {
         @BindView(R.id.MyPlaylist_image) ImageView playlist_image;
         @BindView(R.id.progressBarMyPlaylist) ProgressBar progressBar;
         @BindView(R.id.playlist_items) TextView playlist_items;
@@ -83,17 +85,18 @@ public class MyPlaylistsAdapter extends RecyclerView.Adapter<MyPlaylistsAdapter.
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, view);
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    playlistListener.onPlaylistItemClick(getAdapterPosition(), myPlaylist, itemView);
-                    return true;
-                }
+            itemView.setOnLongClickListener(view -> {
+                playlistListener.onPlaylistItemClick(myPlaylist.getMitems().get(getAdapterPosition()).getId());
+                return false;
             });
+
         }
+
+
     }
 // playlistListener.onPlaylistItemClick(getAdapterPosition(), myPlaylist);
     public interface PlaylistListener {
-        void onPlaylistItemClick(int position, MyPlaylist myPlaylist, View itemView);
+
+        void onPlaylistItemClick(String id);
         }
 }

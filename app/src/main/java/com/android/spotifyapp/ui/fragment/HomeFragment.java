@@ -2,11 +2,15 @@ package com.android.spotifyapp.ui.fragment;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -69,7 +73,7 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
     @BindView(R.id.recommended_items) TextView recommended_items;
     @BindView(R.id.slider) SliderView sliderView;
 
-
+    String id;
     private View view;
 
     @Nullable
@@ -118,6 +122,8 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
             sliderAdapter.UpdateData(userTopTracks);
             CheckProgressBar.checkSliderProgress(sliderView, progressBar_slider);
         });
+
+        registerForContextMenu(MyPlaylistRecyclerView);
         return view;
     }
 
@@ -129,8 +135,29 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
     }
 
     @Override
-    public void onPlaylistItemClick(int position, MyPlaylist myPlaylist, View itemView) {
+    public void onPlaylistItemClick(String id) {
+        this.id = id;
+    }
 
-//        myPlaylistViewModel.deletePlaylist(myPlaylist.getMitems().get(position).getId());
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Options: ");
+        Objects.requireNonNull(getActivity()).getMenuInflater().inflate(R.menu.playlist_context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item)  {
+        switch(item.getItemId()) {
+            case R.id.item_add:
+                Toast.makeText(getContext(), "Added", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.item_delete:
+                if(id != null) {
+                    myPlaylistViewModel.deletePlaylist(id);
+                }
+                Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 }

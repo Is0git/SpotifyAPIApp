@@ -88,7 +88,7 @@ public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onItemListener.onClick(getAdapterPosition(), recentlyPlayed.getMitems().get(getAdapterPosition()).getTrack().getName());
+                    onItemListener.onClick(getAdapterPosition(), recentlyPlayed.getMitems().get(getAdapterPosition()).getTrack().getArtists().get(0).getName() +recentlyPlayed.getMitems().get(getAdapterPosition()).getTrack().getName());
                 }
             });
         }
