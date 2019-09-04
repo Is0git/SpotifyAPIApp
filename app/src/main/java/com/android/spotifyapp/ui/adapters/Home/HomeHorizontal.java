@@ -20,6 +20,7 @@ public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHo
     private RecentlyPlayed recentlyPlayed;
     private View view;
     private android.widget.ProgressBar progressBar;
+    private OnItemListener onItemListener;
     public HomeHorizontal() {
         recentlyPlayed = new RecentlyPlayed();
     }
@@ -52,6 +53,7 @@ public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHo
                         ProgressBar.progressBarUnvisible(holder.progressBar);
                     }
                 });
+
     }
 
     @Override
@@ -62,6 +64,9 @@ public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHo
         }
         return 0;
 
+    }
+    public void setListener(OnItemListener onItemListener) {
+        this.onItemListener = onItemListener;
     }
     public void UpdateData(RecentlyPlayed recentlyPlayed) {
         this.recentlyPlayed = recentlyPlayed;
@@ -79,6 +84,20 @@ public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHo
             song_name = itemView.findViewById(R.id.song_name);
             artist_name = itemView.findViewById(R.id.artist_name);
             progressBar = itemView.findViewById(R.id.progressBar);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemListener.onClick(getAdapterPosition(), recentlyPlayed.getMitems().get(getAdapterPosition()).getTrack().getName());
+                }
+            });
         }
+
+    }
+
+    public interface  OnItemListener{
+        void onClick(int position, String title);
     }
 }
+
+

@@ -1,11 +1,51 @@
 package com.android.spotifyapp.ui.GlobalState;
 
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 
 public class CurrentSongState {
-    private static CurrentSongState currentSongState_instance;
+    private static CurrentSongState currentSongState;
+
+    private CurrentSongState() {}
+
+    public static CurrentSongState getInstance() {
+        if(currentSongState == null) {
+            currentSongState = new CurrentSongState();
+        }
+        return currentSongState;
+    }
+    private PlayerConstants.PlayerState state;
+    private String title;
+    private String id;
     private int song_duration;
-    private PlayerConstants.PlayerState globalstate;
+
+    private YouTubePlayer youTubePlayer;
+
+    public YouTubePlayer getYouTubePlayer() {
+        return youTubePlayer;
+    }
+
+    public void setYouTubePlayer(YouTubePlayer youTubePlayer) {
+        this.youTubePlayer = youTubePlayer;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
 
     public int getSong_duration() {
         return song_duration;
@@ -15,20 +55,13 @@ public class CurrentSongState {
         this.song_duration = song_duration;
     }
 
-    public PlayerConstants.PlayerState getGlobalstate() {
-        return globalstate;
+    public PlayerConstants.PlayerState getState() {
+        return state;
     }
 
-    public void setGlobalstate(PlayerConstants.PlayerState globalstate) {
-        this.globalstate = globalstate;
-    }
-
-    private CurrentSongState() {song_duration = 0;}
-
-    public static CurrentSongState getInstance() {
-        if(currentSongState_instance == null) {
-            currentSongState_instance = new CurrentSongState();
-        }
-        return currentSongState_instance;
+    public void setState(PlayerConstants.PlayerState state) {
+        this.state = state;
     }
 }
+
+

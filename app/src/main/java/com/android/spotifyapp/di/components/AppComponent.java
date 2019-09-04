@@ -12,5 +12,5 @@ import retrofit2.Retrofit;
 @Singleton
 public interface AppComponent {
     @RetrofitQualifier
-Retrofit getRetrofit();
+    Retrofit getRetrofit();
 }

@@ -16,9 +16,13 @@ import com.android.spotifyapp.data.network.model.MyPlaylist;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MyPlaylistsAdapter extends RecyclerView.Adapter<MyPlaylistsAdapter.MyViewHolder> {
     private MyPlaylist myPlaylist;
     private View view;
+    private PlaylistListener playlistListener;
 
     public MyPlaylistsAdapter() {
         this.myPlaylist = new MyPlaylist();
@@ -33,8 +37,6 @@ public class MyPlaylistsAdapter extends RecyclerView.Adapter<MyPlaylistsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull final MyPlaylistsAdapter.MyViewHolder holder, int position) {
-        Log.d("POSITION", "onBindViewHolder: " + position);
-
         if(myPlaylist.getMitems().get(position).getMimages().size() > 0) {
             com.android.spotifyapp.utils.ProgressBar.progressBarVisible(holder.progressBar);
             Picasso.with(view.getContext())
@@ -56,6 +58,9 @@ public class MyPlaylistsAdapter extends RecyclerView.Adapter<MyPlaylistsAdapter.
         holder.playlist_items.setText(view.getContext().getString(R.string.playlist_items, myPlaylist.getMitems().get(position).getMtracks().getTotal()));
     }
 
+    public void setPlaylistListener(PlaylistListener playlistListener) {
+        this.playlistListener = playlistListener;
+    }
     @Override
     public int getItemCount() {
         if(myPlaylist.getMitems() != null)
@@ -71,16 +76,24 @@ public class MyPlaylistsAdapter extends RecyclerView.Adapter<MyPlaylistsAdapter.
 
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView playlist_image;
-        ProgressBar progressBar;
-        TextView playlist_items;
-        TextView playlist_title;
+        @BindView(R.id.MyPlaylist_image) ImageView playlist_image;
+        @BindView(R.id.progressBarMyPlaylist) ProgressBar progressBar;
+        @BindView(R.id.playlist_items) TextView playlist_items;
+        @BindView(R.id.playlist_title) TextView playlist_title;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            playlist_image = itemView.findViewById(R.id.MyPlaylist_image);
-            progressBar = itemView.findViewById(R.id.progressBarMyPlaylist);
-            playlist_items = itemView.findViewById(R.id.playlist_items);
-            playlist_title = itemView.findViewById(R.id.playlist_title);
+            ButterKnife.bind(this, view);
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    playlistListener.onPlaylistItemClick(getAdapterPosition(), myPlaylist, itemView);
+                    return true;
+                }
+            });
         }
     }
+// playlistListener.onPlaylistItemClick(getAdapterPosition(), myPlaylist);
+    public interface PlaylistListener {
+        void onPlaylistItemClick(int position, MyPlaylist myPlaylist, View itemView);
+        }
 }

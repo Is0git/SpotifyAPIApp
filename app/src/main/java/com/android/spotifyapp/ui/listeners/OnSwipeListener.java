@@ -29,10 +29,15 @@ public class OnSwipeListener {
 
                     if( newX > prevX) {
                         //RIGHT
+
                        fragmentManager.beginTransaction().remove(youtubeFragment).commitAllowingStateLoss();
+                        v.setX(prevX);
                     } else {
                         //LEFT
+
                         fragmentManager.beginTransaction().remove(youtubeFragment).commitAllowingStateLoss();
+                        v.setX(prevX);
+
                     }
                 } else {
                     // UP-DOWN Direction
@@ -45,6 +50,9 @@ public class OnSwipeListener {
                     }
                 }
 
+                break;
+            case MotionEvent.ACTION_MOVE:
+                v.setX(event.getX());
                 break;
         }
         return false;

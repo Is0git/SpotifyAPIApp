@@ -3,6 +3,7 @@ package com.android.spotifyapp.data.repositories;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.spotifyapp.data.network.model.RecentlyPlayed;
@@ -29,7 +30,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
-import static com.android.spotifyapp.utils.SpotifyAuthContract.ACCESS_TOKEN;
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
 import static com.android.spotifyapp.utils.TAGS.TAG;
 import static com.android.spotifyapp.utils.TAGS.TAG4;
 
@@ -39,24 +40,28 @@ public class HomeRepository {
     Retrofit retrofit;
     private HomeService homeService;
     private MutableLiveData<UserTopTracks> userTopTracksMutableLiveData;
+    private MutableLiveData<RecentlyPlayed> recentlyPlayedMutableLiveData;
+    private MediatorLiveData mediatorLiveData;
     private Recommendations recommendationsHelper;
     private CompositeDisposable compositeDisposable;
     private static HomeRepository homeRepository_instance;
     private HomeRepository() {
         userTopTracksMutableLiveData = new MutableLiveData<>();
         compositeDisposable = new CompositeDisposable();
+        recentlyPlayedMutableLiveData = new MutableLiveData<>();
+        mediatorLiveData = new MediatorLiveData();
     }
     public static HomeRepository getInstance() {
         if(homeRepository_instance == null) {
             homeRepository_instance = new HomeRepository();
+
         }
         return homeRepository_instance;
     }
     public MutableLiveData<RecentlyPlayed> getRecentlyPlayed() {
-        final MutableLiveData<RecentlyPlayed> recentlyPlayedMutableLiveData = new MutableLiveData<>();
         HomeComponent homeComponent = DaggerHomeComponent.builder()
                 .horizontalRecyclerView(new HorizontalRecyclerView(null))
-                .viewModelsModule(new ViewModelsModule(null))
+                .viewModelsModule(new ViewModelsModule(null, null))
                 .appComponent(() -> {
                     AppComponent appComponent = DaggerAppComponent.create();
                     return appComponent.getRetrofit();
@@ -129,6 +134,7 @@ public class HomeRepository {
 
                     }
                 });
+
 
     }
 
@@ -209,6 +215,7 @@ public class HomeRepository {
                 });
         return userTopTracksMutableLiveData;
     }
+
     public CompositeDisposable getDisposables() {
         return compositeDisposable;
     }

@@ -11,7 +11,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.android.spotifyapp.utils.SpotifyAuthContract.POST_BASE_URL;
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.POST_BASE_URL;
 
 @Module(includes = {AppModule.class})
 public class LoginModule {

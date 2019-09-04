@@ -6,6 +6,7 @@ import com.android.spotifyapp.data.network.model.Recommendations;
 import com.android.spotifyapp.data.network.model.UserTopTracks;
 
 import io.reactivex.Observable;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Path;
@@ -20,4 +21,5 @@ public interface HomeService {
     Observable<Artist>getArtist(@Header("Authorization") String access_token, @Path("id") String id);
     @GET("v1/me/top/{type}")
     Observable<UserTopTracks> getUserTopTracks(@Header("Authorization") String access_token, @Path("type") String type, @Query("limit") int limit);
+
 }

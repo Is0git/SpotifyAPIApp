@@ -20,16 +20,24 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
 
 public class MyPlaylistRepository {
     @Inject
             @RetrofitQualifier
     Retrofit retrofit;
     String TAG = "GETPLAYLIST";
+    private MutableLiveData<MyPlaylist> myPlaylistMutableLiveData;
     private CompositeDisposable compositeDisposable;
     private static MyPlaylistRepository myPlaylistRepository_instance = null;
-    private MyPlaylistRepository() {compositeDisposable = new CompositeDisposable();}
+    private MyPlaylistRepository() {
+        myPlaylistMutableLiveData = new MutableLiveData<>();
+        compositeDisposable = new CompositeDisposable();}
     public static MyPlaylistRepository getInstance() {
         if(myPlaylistRepository_instance == null) {
             myPlaylistRepository_instance = new MyPlaylistRepository();
@@ -37,7 +45,7 @@ public class MyPlaylistRepository {
         return myPlaylistRepository_instance;
     }
     public LiveData<MyPlaylist> getMyPlaylist(String access_token) {
-        final MutableLiveData<MyPlaylist> myPlaylistMutableLiveData = new MutableLiveData<>();
+
         MyplaylistComponent myplaylistComponent = DaggerMyplaylistComponent.create();
         myplaylistComponent.inject(this);
         MyPlaylistService myPlaylistService =  retrofit.create(MyPlaylistService.class);
@@ -69,6 +77,29 @@ public class MyPlaylistRepository {
                     }
                 });
         return myPlaylistMutableLiveData;
+    }
+    public void delete_playlist(String playlist_id) {
+            MyPlaylistService myPlaylistService = retrofit.create(MyPlaylistService.class);
+            Call<Void> call =  myPlaylistService.deletePlaylist("Bearer " + ACCESS_TOKEN, playlist_id);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    refreshPlaylist();
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
+            });
+    }
+
+    public void resetPlaylist() {
+        myPlaylistMutableLiveData.setValue(new MyPlaylist());
+    }
+
+    public void refreshPlaylist() {
+        getMyPlaylist("Bearer " + ACCESS_TOKEN);
     }
     public CompositeDisposable getDisposables() {
         return compositeDisposable;

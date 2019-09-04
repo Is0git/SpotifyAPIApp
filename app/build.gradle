@@ -69,4 +69,10 @@ dependencies {
 
     //YoutubePlayer
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.4'
+
+    //Swiper
+    implementation 'com.github.Tunous:SwipeActionView:1.3.0'
+
+    //LeakCanary
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
 }

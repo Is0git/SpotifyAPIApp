@@ -1,4 +1,4 @@
-package com.android.spotifyapp.utils;
+package com.android.spotifyapp.utils.Contracts;
 
 public class SpotifyAuthContract {
     final public static String CLIENT_ID = "c9e75133ed174d49ad53b611041aad80";

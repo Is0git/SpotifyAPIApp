@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import com.android.spotifyapp.App;
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.ViewModels.BaseViewModel;
+import com.android.spotifyapp.data.network.model.RecentlyPlayed;
 import com.android.spotifyapp.data.network.model.User;
 import com.android.spotifyapp.di.components.BaseComponent;
 import com.android.spotifyapp.di.components.DaggerBaseComponent;
@@ -40,13 +41,14 @@ public class BaseActivity extends AppCompatActivity implements YouTubePlayer.OnI
     @Inject BaseViewModel viewModel;
     View actionbar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_activity);
         ButterKnife.bind(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.youtube_fragment, new YoutubeFragment()).commit();
+
 
         //ActionBar
         actionbar  = LayoutInflater.from(this).inflate(R.layout.actionbar, null);
@@ -90,7 +92,6 @@ public class BaseActivity extends AppCompatActivity implements YouTubePlayer.OnI
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, current).commit();
             return true;
         });
-
     }
 
     @Override
@@ -104,4 +105,10 @@ public class BaseActivity extends AppCompatActivity implements YouTubePlayer.OnI
     public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
 
     }
+
+    public void startPlayer() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.youtube_fragment, new YoutubeFragment()).commit();
+    }
+
+
 }

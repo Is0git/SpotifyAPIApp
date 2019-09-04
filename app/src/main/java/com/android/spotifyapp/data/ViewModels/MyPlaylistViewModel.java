@@ -21,6 +21,9 @@ public class MyPlaylistViewModel extends AndroidViewModel {
         return myPlaylistLiveData;
     }
 
+    public void deletePlaylist(String playlist_id) {
+        myPlaylistRepository.delete_playlist(playlist_id);
+    }
     @Override
     protected void onCleared() {
         super.onCleared();

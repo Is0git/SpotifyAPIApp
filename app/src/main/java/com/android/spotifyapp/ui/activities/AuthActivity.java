@@ -17,6 +17,9 @@ import com.android.spotifyapp.data.ViewModels.MyPlaylistViewModel;
 import com.android.spotifyapp.data.network.model.AccessToken;
 import com.jakewharton.rxbinding3.view.RxView;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
@@ -24,12 +27,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import kotlin.Unit;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.REDIRECT_URL;
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.URI;
 import static com.android.spotifyapp.utils.ProgressBar.progressBarUnvisible;
 import static com.android.spotifyapp.utils.ProgressBar.progressBarVisible;
-import static com.android.spotifyapp.utils.SpotifyAuthContract.ACCESS_TOKEN;
-import static com.android.spotifyapp.utils.SpotifyAuthContract.REDIRECT_URL;
-import static com.android.spotifyapp.utils.SpotifyAuthContract.URI;
 
 public class AuthActivity extends AppCompatActivity {
     Button login;
@@ -55,20 +64,6 @@ public class AuthActivity extends AppCompatActivity {
 
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
         myPlaylistViewModel = ViewModelProviders.of(this).get(MyPlaylistViewModel.class);
-
-//        listener = new YouTubePlayer.OnInitializedListener() {
-//            @Override
-//            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-//                youTubePlayer.loadVideo("XKxwV1ETTfc");
-//            }
-//
-//            @Override
-//            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-//
-//            }
-//        };
-//
-//        youTubePlayerView.initialize(YoutubeAPIContract.getApiKey(), listener);
 
         RxView.clicks(login)
                 .throttleFirst(10000, TimeUnit.MILLISECONDS)
@@ -132,4 +127,24 @@ public class AuthActivity extends AppCompatActivity {
         }
 
     }
+
+    //    https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&type=video&key=AIzaSyApgYVsXPT2eRnaUdxl2F7fEHIZkaakNQc
+//    public void Retrofit() {
+//        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+//        httpLoggingInterceptor.level(HttpLoggingInterceptor.Level.BODY);
+//        String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&type=video&key=AIzaSyApgYVsXPT2eRnaUdxl2F7fEHIZkaakNQc";
+//        Request request = new Request.Builder().url(url).method("GET", null).build();
+//        OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build();
+//        okHttpClient.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//
+//            }
+//
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//
+//            }
+//        });
+//    }
 }

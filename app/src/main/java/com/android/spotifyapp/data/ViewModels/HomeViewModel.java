@@ -14,33 +14,25 @@ import com.android.spotifyapp.data.repositories.HomeRepository;
 
 public class HomeViewModel extends AndroidViewModel {
     private HomeRepository homeRepository;
-    private MutableLiveData<RecentlyPlayed>recentlyPlayedLiveData;
-    private MutableLiveData<Recommendations>recommendationsMutableLiveData;
-    private MutableLiveData<UserTopTracks>userTopTracksMutableLiveData;
+
     public HomeViewModel(@NonNull Application application) {
         super(application);
         homeRepository = HomeRepository.getInstance();
     }
 
     public LiveData<RecentlyPlayed> getRecentlyPlayedLiveData() {
-        recentlyPlayedLiveData = homeRepository.getRecentlyPlayed();
-        return recentlyPlayedLiveData;
-    }
-    public void setData() {
-        recentlyPlayedLiveData.setValue(new RecentlyPlayed());
-    }
-    public void refresh() {
-        homeRepository.refresh(recentlyPlayedLiveData);
+        return homeRepository.getRecentlyPlayed();
+
     }
 
     public LiveData<Recommendations>getRecommendations() {
-        recommendationsMutableLiveData = homeRepository.getRecommendations();
-        return recommendationsMutableLiveData;
+        return homeRepository.getRecommendations();
+
     }
 
     public LiveData<UserTopTracks>getUserTopTracksMutableLiveData(int limit) {
-        userTopTracksMutableLiveData = homeRepository.getUserTopTracks(limit);
-        return userTopTracksMutableLiveData;
+        return homeRepository.getUserTopTracks(limit);
+
     }
 
     @Override

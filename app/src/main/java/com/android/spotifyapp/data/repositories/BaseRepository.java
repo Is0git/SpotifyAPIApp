@@ -23,7 +23,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
-import static com.android.spotifyapp.utils.SpotifyAuthContract.ACCESS_TOKEN;
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
 
 public class BaseRepository {
     @Inject

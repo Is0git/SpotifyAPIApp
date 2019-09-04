@@ -19,10 +19,10 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
-import static com.android.spotifyapp.utils.SpotifyAuthContract.AUTH_CODE;
-import static com.android.spotifyapp.utils.SpotifyAuthContract.CLIENT_ID;
-import static com.android.spotifyapp.utils.SpotifyAuthContract.CLIENT_SECRET;
-import static com.android.spotifyapp.utils.SpotifyAuthContract.REDIRECT_URL;
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.AUTH_CODE;
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.CLIENT_ID;
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.CLIENT_SECRET;
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.REDIRECT_URL;
 
 public class AuthRepository {
     @Inject
