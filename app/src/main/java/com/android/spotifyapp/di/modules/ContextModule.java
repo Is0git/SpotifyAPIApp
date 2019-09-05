@@ -1,6 +1,7 @@
 package com.android.spotifyapp.di.modules;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.android.spotifyapp.di.qualifiers.ActivityContext;
 import com.android.spotifyapp.di.scopes.HomeFragmentScope;
@@ -11,7 +12,7 @@ import dagger.Provides;
 @Module
 
 public class ContextModule {
-    private Activity context;
+    private Context context;
 
     public ContextModule(Activity context) {
         this.context = context;
@@ -19,8 +20,7 @@ public class ContextModule {
 
     @Provides
     @ActivityContext
-    @HomeFragmentScope
-    Activity getContext() {
+    Context getContext() {
         return this.context;
     }
 }

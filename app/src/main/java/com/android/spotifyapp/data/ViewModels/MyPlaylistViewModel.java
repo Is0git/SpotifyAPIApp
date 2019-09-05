@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.android.spotifyapp.data.network.model.MyPlaylist;
+import com.android.spotifyapp.data.network.model.MyPlaylistPost;
 import com.android.spotifyapp.data.repositories.MyPlaylistRepository;
 
 public class MyPlaylistViewModel extends AndroidViewModel {
@@ -23,6 +24,10 @@ public class MyPlaylistViewModel extends AndroidViewModel {
 
     public void deletePlaylist(String playlist_id) {
         myPlaylistRepository.delete_playlist(playlist_id);
+    }
+
+    public void createPlaylist(MyPlaylistPost myPlaylistPost) {
+        myPlaylistRepository.createNewPlaylist(myPlaylistPost);
     }
     @Override
     protected void onCleared() {

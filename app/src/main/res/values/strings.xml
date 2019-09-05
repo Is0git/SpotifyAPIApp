@@ -10,4 +10,9 @@
     <string name="items">%1$d ITEMS</string>
     <string name="followersString">followers</string>
     <string name="artist">ARTIST</string>
+    <string name="give_your_playlist_a_catchy_description">Give your playlist a catchy description.</string>
+    <string name="description">Description</string>
+    <string name="my_playlist_4">My playlist #4</string>
+    <string name="create">CREATE</string>
+    <string name="playlist_title">Playlist title</string>
 </resources>

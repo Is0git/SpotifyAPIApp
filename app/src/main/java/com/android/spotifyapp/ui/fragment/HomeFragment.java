@@ -1,5 +1,8 @@
 package com.android.spotifyapp.ui.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -22,9 +25,12 @@ import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.ViewModels.HomeViewModel;
 import com.android.spotifyapp.data.ViewModels.MyPlaylistViewModel;
 import com.android.spotifyapp.data.network.model.MyPlaylist;
+import com.android.spotifyapp.data.network.model.MyPlaylistPost;
 import com.android.spotifyapp.data.network.model.RecentlyPlayed;
 import com.android.spotifyapp.di.components.DaggerHomeComponent;
 import com.android.spotifyapp.di.components.HomeComponent;
+import com.android.spotifyapp.di.modules.ContextModule;
+import com.android.spotifyapp.di.modules.DialogModule;
 import com.android.spotifyapp.di.modules.HorizontalRecyclerView;
 import com.android.spotifyapp.di.modules.ViewModelsModule;
 import com.android.spotifyapp.di.qualifiers.MyPlaylistListQualifier;
@@ -37,8 +43,13 @@ import com.android.spotifyapp.ui.adapters.Home.MyPlaylistsAdapter;
 import com.android.spotifyapp.ui.adapters.Home.RecommendedAdapter;
 import com.android.spotifyapp.ui.adapters.Home.SliderAdapter;
 import com.android.spotifyapp.utils.CheckProgressBar;
+import com.android.spotifyapp.utils.Dialogs.Dialog;
 import com.smarteist.autoimageslider.SliderView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -46,6 +57,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
 import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
 
 
@@ -64,6 +76,8 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
 
     @Inject SliderAdapter sliderAdapter;
 
+    @Inject Dialog dialog;
+
     @BindView(R.id.progressBarRecommended) ProgressBar progressBar_recommended;
     @BindView(R.id.progressBarRecentlyPlayed) ProgressBar progressBar_recently;
     @BindView(R.id.progressBarPlaylists) ProgressBar progressBar_playlists;
@@ -73,7 +87,7 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
     @BindView(R.id.recommended_items) TextView recommended_items;
     @BindView(R.id.slider) SliderView sliderView;
 
-    String id;
+    private String id;
     private View view;
 
     @Nullable
@@ -86,6 +100,8 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
                 .horizontalRecyclerView(new HorizontalRecyclerView(view))
                 .appComponent(App.get(Objects.requireNonNull(this.getActivity())).getAppComponent())
                 .viewModelsModule(new ViewModelsModule(this, null))
+                .dialogModule(new DialogModule(this))
+                .contextModule(new ContextModule(getActivity()))
                 .build();
         component.injectFragment(this);
 
@@ -141,15 +157,16 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Options: ");
+        menu.setHeaderTitle("Options ");
         Objects.requireNonNull(getActivity()).getMenuInflater().inflate(R.menu.playlist_context_menu, menu);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item)  {
+
         switch(item.getItemId()) {
             case R.id.item_add:
-                Toast.makeText(getContext(), "Added", Toast.LENGTH_SHORT).show();
+               dialog.dialogshow("Add a new playlist");
                 return true;
             case R.id.item_delete:
                 if(id != null) {
@@ -159,5 +176,25 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
                 return true;
         }
         return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+            dialog.selectResult(data);
+
+
+    }
+
+    public void setData(String title, String description, String url, boolean status) {
+//        List<MyPlaylistPost.Images> images = new ArrayList<>();
+//        images.add(new MyPlaylistPost.Images(250, "https://i.scdn.co/image/012ecd119617ac24ab56620ace4b81735b172686", null));
+        MyPlaylistPost myPlaylistPost = new MyPlaylistPost(title, description, status, false);
+//        Log.d("REAL", "setData: " + myPlaylistPost.getImages().get(0).getUrl());
+        myPlaylistViewModel.createPlaylist(myPlaylistPost);
+//        MyPlaylistPost myPlaylistPost = new MyPlaylistPost(new List<MyPlaylistPost.Images>().add(new MyPlaylistPost.Images(null, url, null)), title, description, status);
+
+
     }
 }

@@ -14,6 +14,8 @@ import com.android.spotifyapp.di.components.AppComponent;
 import com.android.spotifyapp.di.components.DaggerAppComponent;
 import com.android.spotifyapp.di.components.DaggerHomeComponent;
 import com.android.spotifyapp.di.components.HomeComponent;
+import com.android.spotifyapp.di.modules.ContextModule;
+import com.android.spotifyapp.di.modules.DialogModule;
 import com.android.spotifyapp.di.modules.HorizontalRecyclerView;
 import com.android.spotifyapp.di.modules.ViewModelsModule;
 import com.android.spotifyapp.di.qualifiers.RetrofitQualifier;
@@ -50,6 +52,19 @@ public class HomeRepository {
         compositeDisposable = new CompositeDisposable();
         recentlyPlayedMutableLiveData = new MutableLiveData<>();
         mediatorLiveData = new MediatorLiveData();
+
+        HomeComponent homeComponent = DaggerHomeComponent.builder()
+                .horizontalRecyclerView(new HorizontalRecyclerView(null))
+                .viewModelsModule(new ViewModelsModule(null, null))
+                .appComponent(() -> {
+                    AppComponent appComponent = DaggerAppComponent.create();
+                    return appComponent.getRetrofit();
+                })
+                .contextModule(new ContextModule(null))
+                .dialogModule(new DialogModule(null))
+                .build();
+
+        homeComponent.inject(this);
     }
     public static HomeRepository getInstance() {
         if(homeRepository_instance == null) {
@@ -59,14 +74,8 @@ public class HomeRepository {
         return homeRepository_instance;
     }
     public MutableLiveData<RecentlyPlayed> getRecentlyPlayed() {
-        HomeComponent homeComponent = DaggerHomeComponent.builder()
-                .horizontalRecyclerView(new HorizontalRecyclerView(null))
-                .viewModelsModule(new ViewModelsModule(null, null))
-                .appComponent(() -> {
-                    AppComponent appComponent = DaggerAppComponent.create();
-                    return appComponent.getRetrofit();
-                }).build();
-        homeComponent.inject(this);
+
+
         homeService = retrofit.create(HomeService.class);
         Observable<RecentlyPlayed>observable = homeService.getRecentlyPlayed("Bearer " + ACCESS_TOKEN);
         observable
@@ -97,45 +106,6 @@ public class HomeRepository {
                     }
                 });
         return recentlyPlayedMutableLiveData;
-    }
-    public void refresh(final MutableLiveData<RecentlyPlayed> mutableLiveData) {
-        HomeComponent homeComponent = DaggerHomeComponent.builder()
-                .horizontalRecyclerView(new HorizontalRecyclerView(null))
-                .appComponent(() -> {
-                    AppComponent appComponent = DaggerAppComponent.create();
-                    return appComponent.getRetrofit();
-                }).build();
-        homeComponent.inject(this);
-        HomeService homeService = retrofit.create(HomeService.class);
-        Observable<RecentlyPlayed>observable = homeService.getRecentlyPlayed("Bearer " + ACCESS_TOKEN);
-        observable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<RecentlyPlayed>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(RecentlyPlayed recentlyPlayed) {
-
-                        mutableLiveData.setValue(recentlyPlayed);
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d(TAG, "onError: +asd " + e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-
     }
 
     @SuppressLint("CheckResult")

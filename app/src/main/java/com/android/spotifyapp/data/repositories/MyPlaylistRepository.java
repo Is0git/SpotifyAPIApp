@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.spotifyapp.data.network.model.MyPlaylist;
+import com.android.spotifyapp.data.network.model.MyPlaylistPost;
 import com.android.spotifyapp.data.network.services.MyPlaylistService;
 import com.android.spotifyapp.di.components.DaggerMyplaylistComponent;
 import com.android.spotifyapp.di.components.MyplaylistComponent;
@@ -26,6 +27,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.USER_ID;
 
 public class MyPlaylistRepository {
     @Inject
@@ -34,10 +36,16 @@ public class MyPlaylistRepository {
     String TAG = "GETPLAYLIST";
     private MutableLiveData<MyPlaylist> myPlaylistMutableLiveData;
     private CompositeDisposable compositeDisposable;
+    private MyPlaylistService myPlaylistService;
     private static MyPlaylistRepository myPlaylistRepository_instance = null;
     private MyPlaylistRepository() {
         myPlaylistMutableLiveData = new MutableLiveData<>();
-        compositeDisposable = new CompositeDisposable();}
+        compositeDisposable = new CompositeDisposable();
+        MyplaylistComponent myplaylistComponent = DaggerMyplaylistComponent.create();
+        myplaylistComponent.inject(this);
+        myPlaylistService =  retrofit.create(MyPlaylistService.class);
+
+    }
     public static MyPlaylistRepository getInstance() {
         if(myPlaylistRepository_instance == null) {
             myPlaylistRepository_instance = new MyPlaylistRepository();
@@ -46,9 +54,6 @@ public class MyPlaylistRepository {
     }
     public LiveData<MyPlaylist> getMyPlaylist(String access_token) {
 
-        MyplaylistComponent myplaylistComponent = DaggerMyplaylistComponent.create();
-        myplaylistComponent.inject(this);
-        MyPlaylistService myPlaylistService =  retrofit.create(MyPlaylistService.class);
         Observable<MyPlaylist> observable2 = myPlaylistService.getMyPlaylist(access_token);
         observable2.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -94,8 +99,21 @@ public class MyPlaylistRepository {
             });
     }
 
-    public void resetPlaylist() {
-        myPlaylistMutableLiveData.setValue(new MyPlaylist());
+    public void createNewPlaylist(MyPlaylistPost myPlaylistPost) {
+        Call<Void> call = myPlaylistService.addPlaylist("Bearer " + ACCESS_TOKEN, myPlaylistPost, USER_ID);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                refreshPlaylist();
+                Log.d("REAL", "onResponse: " + response.code());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("REAL", "onFailure: " + t.getMessage());
+            }
+        });
+
     }
 
     public void refreshPlaylist() {

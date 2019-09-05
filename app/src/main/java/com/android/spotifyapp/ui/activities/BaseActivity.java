@@ -34,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.android.spotifyapp.utils.ActionBarSettings.SetActionBar;
+import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.USER_ID;
 
 public class BaseActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener {
     @BindView(R.id.bottom_nav) BottomNavigationView bottomNavigationView;
@@ -41,13 +42,11 @@ public class BaseActivity extends AppCompatActivity implements YouTubePlayer.OnI
     @Inject BaseViewModel viewModel;
     View actionbar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_activity);
         ButterKnife.bind(this);
-
 
 
         //ActionBar
@@ -74,6 +73,8 @@ public class BaseActivity extends AppCompatActivity implements YouTubePlayer.OnI
                 Picasso.with(getApplicationContext())
                         .load(user.getMimages().get(0).getUrl())
                         .fit().into(user_image);
+
+               USER_ID = user.getId();
             }
         });
 

@@ -11,4 +11,5 @@ public class SpotifyAuthContract {
     public final static String REDIRECT_URL = "spotifyapp://callback";
     public final static String POST_BASE_URL = "https://accounts.spotify.com/api/token/";
     public static String ACCESS_TOKEN;
+    public static String USER_ID;
 }

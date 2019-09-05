@@ -51,6 +51,8 @@ public class OnSwipeListener {
                 }
 
                 break;
+
+                //Follows touch
             case MotionEvent.ACTION_MOVE:
                 v.setX(event.getX());
                 break;
