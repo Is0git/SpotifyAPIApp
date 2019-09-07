@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.di.qualifiers.ActivityContext;
@@ -17,11 +18,13 @@ import com.android.spotifyapp.di.qualifiers.RecommendedListQualifier;
 import com.android.spotifyapp.di.qualifiers.RelatedArtistsRecyclerViewQualifier;
 import com.android.spotifyapp.di.qualifiers.TopSongRecyclerViewQualifier;
 import com.android.spotifyapp.di.qualifiers.VerticalLayoutQualifier;
+import com.android.spotifyapp.di.scopes.ArtistFragmentScope;
+import com.android.spotifyapp.di.scopes.HomeFragmentScope;
 
 import dagger.Module;
 import dagger.Provides;
 
-@Module(includes = {ContextModule.class})
+@Module
 public class RecyclerViewModule {
     private View view;
 
@@ -52,6 +55,7 @@ public class RecyclerViewModule {
 
     @Provides
     @RecentlyPlayedQualifier
+    @HomeFragmentScope
     RecyclerView recyclerView(RecyclerView.LayoutManager layoutManager) {
         RecyclerView recyclerView;
         recyclerView = view.findViewById(R.id.recently_played_list);
@@ -61,6 +65,7 @@ public class RecyclerViewModule {
     }
     @Provides
     @MyPlaylistListQualifier
+    @HomeFragmentScope
     RecyclerView MyPlaylistRecyclerView(RecyclerView.LayoutManager layoutManager) {
         RecyclerView recyclerView;
         recyclerView = view.findViewById(R.id.MyPlaylists_list);
@@ -71,6 +76,7 @@ public class RecyclerViewModule {
 
     @Provides
     @RecommendedListQualifier
+    @HomeFragmentScope
     RecyclerView RecommendedRecyclerView(RecyclerView.LayoutManager layoutManager) {
         RecyclerView recyclerView;
         recyclerView = view.findViewById(R.id.recommended_list);
@@ -80,17 +86,8 @@ public class RecyclerViewModule {
     }
 
     @Provides
-    @ArtistsAlbumsRecyclerViewQualifier
-    RecyclerView ArtistAlbumRecyclerView(@GridLayoutQualifier RecyclerView.LayoutManager layoutManager) {
-        RecyclerView recyclerView;
-        recyclerView = view.findViewById(R.id.albums_recyclerView);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-        return recyclerView;
-    }
-
-    @Provides
     @TopSongRecyclerViewQualifier
+    @ArtistFragmentScope
     RecyclerView TopSongRecyclerView(@VerticalLayoutQualifier RecyclerView.LayoutManager layoutManager) {
         RecyclerView recyclerView;
         recyclerView = view.findViewById(R.id.top_tracks_recyclerView);
@@ -101,12 +98,19 @@ public class RecyclerViewModule {
 
     @Provides
     @RelatedArtistsRecyclerViewQualifier
+    @ArtistFragmentScope
     RecyclerView RelatedArtistRecyclerView(RecyclerView.LayoutManager layoutManager) {
         RecyclerView recyclerView;
         recyclerView = view.findViewById(R.id.related_artists_recylerView);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         return recyclerView;
+    }
+
+    @Provides
+    @ArtistFragmentScope
+    ViewPager viewPager() {
+        return view.findViewById(R.id.albums_pager);
     }
 
 }

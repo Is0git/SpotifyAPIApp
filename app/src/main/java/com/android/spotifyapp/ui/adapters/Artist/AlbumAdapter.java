@@ -1,76 +1,84 @@
 package com.android.spotifyapp.ui.adapters.Artist;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.network.model.byId.ArtistsAlbum;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder> {
+public class AlbumAdapter extends PagerAdapter {
     private ArtistsAlbum artistsAlbum;
     private View view;
+    private Context context;
 
-    @NonNull
-    @Override
-    public AlbumAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.artist_album_layout, parent, false);
-        return new MyViewHolder(view);
+    public AlbumAdapter(Context context) {
+        this.context = context;
+        artistsAlbum = new ArtistsAlbum();
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull AlbumAdapter.MyViewHolder holder, int position) {
-        if(artistsAlbum.getItems() != null) {
-            if(artistsAlbum.getItems().get(position).getArtists() != null) {
-                Picasso.with(view.getContext())
-                        .load(artistsAlbum.getItems().get(position).getImages().get(0).getUrl())
-                        .fit()
-                        .into(holder.artist_album_image);
-            }
-            holder.songs_number_text.setText(String.valueOf(artistsAlbum.getItems().get(position).getTotal_tracks()));
-            holder.release_date_text.setText(artistsAlbum.getItems().get(position).getRelease_date());
-            holder.artist_number_text.setText(String.valueOf(artistsAlbum.getItems().get(position).getArtists().size()));
-            holder.album_image_type_text.setText(artistsAlbum.getItems().get(position).getAlbum_type());
-            holder.album_name.setText(artistsAlbum.getItems().get(position).getName());
-            holder.release_date_precision.setText(artistsAlbum.getItems().get(position).getRelease_date_precision().toUpperCase());
-        }
-    }
 
     @Override
-    public int getItemCount() {
-        if(artistsAlbum != null) {
-            return artistsAlbum.getItems().size();
-        }
-        return 0;
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        container.removeView((View) object);
     }
 
     public void setArtistsAlbum(ArtistsAlbum artistsAlbum) {
         this.artistsAlbum = artistsAlbum;
         notifyDataSetChanged();
     }
+    @BindView(R.id.release_date_precision) TextView release_date_precision;
+    @BindView(R.id.artist_album_image) ImageView artist_album_image;
+    @BindView(R.id.songs_number_text) TextView songs_number_text;
+    @BindView(R.id.release_date_text) TextView release_date_text;
+    @BindView(R.id.artist_number_text) TextView artist_number_text;
+    @BindView(R.id.album_image_type) TextView album_image_type_text;
+    @BindView(R.id.artist_album_name_text) TextView album_name;
+    @NonNull
+    @Override
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.release_date_precision) TextView release_date_precision;
-        @BindView(R.id.artist_album_image) ImageView artist_album_image;
-        @BindView(R.id.songs_number_text) TextView songs_number_text;
-        @BindView(R.id.release_date_text) TextView release_date_text;
-        @BindView(R.id.artist_number_text) TextView artist_number_text;
-        @BindView(R.id.album_image_type) TextView album_image_type_text;
-        @BindView(R.id.artist_album_name_text) TextView album_name;
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+        ViewGroup layout = (ViewGroup) LayoutInflater.from(container.getContext()).inflate(R.layout.artist_album_layout, container, false);
+        ButterKnife.bind(this, layout);
 
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, view);
+                if(artistsAlbum.getItems() != null) {
+            if(artistsAlbum.getItems().get(position).getArtists() != null) {
+                Picasso.with(context)
+                        .load(artistsAlbum.getItems().get(position).getImages().get(0).getUrl())
+                        .fit()
+                        .into(artist_album_image);
+            }
+            songs_number_text.setText(String.valueOf(artistsAlbum.getItems().get(position).getTotal_tracks()));
+            release_date_text.setText(artistsAlbum.getItems().get(position).getRelease_date());
+            artist_number_text.setText(String.valueOf(artistsAlbum.getItems().get(position).getArtists().size()));
+            album_image_type_text.setText(artistsAlbum.getItems().get(position).getAlbum_type());
+            album_name.setText(artistsAlbum.getItems().get(position).getName());
+            release_date_precision.setText(artistsAlbum.getItems().get(position).getRelease_date_precision().toUpperCase());
         }
+                container.addView(layout);
+                return layout;
+
     }
+
+    @Override
+    public int getCount() {
+                if(artistsAlbum.getItems() != null) {
+            return artistsAlbum.getItems().size();
+        }
+        return 0;
+    }
+
+
+    @Override
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+        return view == object;
+    }
+
 }

@@ -12,6 +12,7 @@
             android:id="@+id/artist_image_layout"
             android:layout_width="wrap_content"
             android:layout_height="400dp">
+
         <ImageView
             android:id="@+id/artist_photo"
             android:layout_width="match_parent"
@@ -63,6 +64,15 @@
             android:textSize="14sp"
             android:letterSpacing="0.6"
             android:textColor="@color/colorPrimary" />
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/progress_bar_header"
+                style="@style/SpinKitView.DoubleBounce"
+                android:layout_width="190dp"
+                android:layout_height="190dp"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                app:SpinKit_Color="@color/colorAccent"
+                android:layout_centerInParent="true" />
     </RelativeLayout>
         <RelativeLayout
             android:id="@+id/albums"
@@ -89,6 +99,12 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:background="@color/colorBlack"/>
+                <ProgressBar
+                    android:id="@+id/progress_bar_small_image"
+                    android:visibility="visible"
+                    android:layout_width="30dp"
+                    android:layout_gravity="center"
+                    android:layout_height="30dp"/>
             </androidx.cardview.widget.CardView>
             <TextView
                 android:id="@+id/albums_text"
@@ -137,19 +153,34 @@
                 android:text="@string/view_all" />
 
         </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/albums_recyclerView"
+<RelativeLayout
+    android:id="@+id/albums_pager_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/albums">
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/albums_pager"
             android:layout_width="match_parent"
-            android:layout_height="420dp"
-            android:layout_below="@id/albums">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="420dp">
+        </androidx.viewpager.widget.ViewPager>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/progress_bar_viewPager"
+        style="@style/SpinKitView.DoubleBounce"
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        app:SpinKit_Color="@color/colorAccent"
+        android:layout_centerInParent="true" />
+    </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/top_tracks_layout"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_below="@id/albums_recyclerView"
+            android:layout_below="@id/albums_pager_layout"
             android:background="@color/colorMediumDarker">
             <View
                 android:layout_width="match_parent"
@@ -203,16 +234,32 @@
                 android:text="@string/view_all" />
 
         </RelativeLayout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/top_tracks_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="450dp"
-            android:layout_below="@id/top_tracks_layout"/>
+        <RelativeLayout
+            android:id="@+id/top_tracks_recyclerView_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/top_tracks_layout">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/top_tracks_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="450dp"
+                />
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/progress_bar_top_tracks"
+                style="@style/SpinKitView.DoubleBounce"
+                android:layout_width="190dp"
+                android:layout_height="190dp"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                app:SpinKit_Color="@color/colorAccent"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/related_artists_layout"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_below="@id/top_tracks_recyclerView"
+            android:layout_below="@id/top_tracks_recyclerView_layout"
             android:background="@color/colorMediumDarker">
             <View
                 android:layout_width="match_parent"
@@ -265,14 +312,29 @@
                 android:fontFamily="@font/myriadpro"
                 android:text="@string/view_all" />
     </RelativeLayout>
-
+        <RelativeLayout
+            android:id="@+id/related_artists_recyclerView_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/related_artists_layout">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/related_artists_recylerView"
             android:layout_width="match_parent"
             android:layout_height="210dp"
-            android:layout_below="@id/related_artists_layout"
+
             android:layout_marginTop="0dp">
         </androidx.recyclerview.widget.RecyclerView>
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/progress_bar_related_artists"
+            style="@style/SpinKitView.DoubleBounce"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            app:SpinKit_Color="@color/colorAccent"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"

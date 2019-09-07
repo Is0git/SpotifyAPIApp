@@ -88,7 +88,7 @@ public class BaseActivity extends AppCompatActivity {
                     current = new PlaylistFragment();
 
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, current).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, current).commitNowAllowingStateLoss();
             return true;
         });
     }

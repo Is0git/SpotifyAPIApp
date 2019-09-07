@@ -44,6 +44,7 @@ public class YoutubeFragment extends Fragment  {
     private FragmentManager fragmentManager;
     @Inject YoutubePlayerViewmodel youtubePlayerViewmodel;
     private CurrentSongState currentSongState;
+    private YouTubePlayer youtubePlayerInstance;
 
 
     @Nullable
@@ -69,7 +70,7 @@ public class YoutubeFragment extends Fragment  {
             @Override
             public void onReady(@NotNull YouTubePlayer youTubePlayer) {
                 super.onReady(youTubePlayer);
-                currentSongState.setYouTubePlayer(youTubePlayer); // TODO FIX MEMORY LEAK
+                youtubePlayerInstance = youTubePlayer;
                 if(currentSongState.getId() != null) {
                     Log.d("Clickeded", "onReady: " + currentSongState.getId());
                     youTubePlayer.loadVideo(currentSongState.getId(), 0f);
@@ -120,11 +121,11 @@ public class YoutubeFragment extends Fragment  {
     }
 
     @OnClick(R.id.play_button) void play() {
-        if(currentSongState.getYouTubePlayer() != null && currentSongState.getState() != null) {
+        if(youtubePlayerInstance != null && currentSongState.getState() != null) {
             if (currentSongState.getState() == PlayerConstants.PlayerState.PLAYING)
-                currentSongState.getYouTubePlayer().pause();
+                youtubePlayerInstance.pause();
             else {
-                currentSongState.getYouTubePlayer().play();
+                youtubePlayerInstance.play();
             }
         }
     }

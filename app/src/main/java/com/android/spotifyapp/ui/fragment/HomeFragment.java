@@ -204,7 +204,7 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
                 .replace(R.id.fragment_container, artist_fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
     }
 }
 

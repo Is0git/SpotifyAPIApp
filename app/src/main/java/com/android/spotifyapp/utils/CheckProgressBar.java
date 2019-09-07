@@ -1,6 +1,7 @@
 package com.android.spotifyapp.utils;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.smarteist.autoimageslider.SliderView;
 
@@ -23,4 +24,14 @@ public class CheckProgressBar {
             ProgressBar.progressBarUnvisible(progressBar);
         }
     }
+
+    public static void checkViewPagerProgress(ViewPager viewPager, android.widget.ProgressBar progressBar) {
+        if(Objects.requireNonNull(viewPager.getAdapter()).getCount() == 0) {
+            ProgressBar.progressBarVisible(progressBar);
+        }
+        else {
+            ProgressBar.progressBarUnvisible(progressBar);
+        }
+    }
+
 }

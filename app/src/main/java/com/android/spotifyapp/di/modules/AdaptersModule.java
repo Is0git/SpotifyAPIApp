@@ -1,5 +1,8 @@
 package com.android.spotifyapp.di.modules;
 
+import android.content.Context;
+
+import com.android.spotifyapp.di.qualifiers.ActivityContext;
 import com.android.spotifyapp.di.scopes.ArtistFragmentScope;
 import com.android.spotifyapp.di.scopes.HomeFragmentScope;
 import com.android.spotifyapp.ui.adapters.Artist.AlbumAdapter;
@@ -39,14 +42,16 @@ public class AdaptersModule {
 
     @Provides
     @ArtistFragmentScope
-    public AlbumAdapter albumAdapter() {return new AlbumAdapter(); }
-
-    @Provides
-    @ArtistFragmentScope
     public TopSongsAdapter topSongsAdapter() {return new TopSongsAdapter();}
 
     @Provides
     @ArtistFragmentScope
     public RelatedArtistsAdapter relatedArtistsAdapter() {return new RelatedArtistsAdapter();}
+
+    @Provides
+    @ArtistFragmentScope
+    public AlbumAdapter albumAdapter(@ActivityContext  Context context) {
+        return new AlbumAdapter(context);
+    }
 
 }

@@ -19,15 +19,9 @@ public class CurrentSongState {
     private String id;
     private int song_duration;
 
-    private YouTubePlayer youTubePlayer;
 
-    public YouTubePlayer getYouTubePlayer() {
-        return youTubePlayer;
-    }
 
-    public void setYouTubePlayer(YouTubePlayer youTubePlayer) {
-        this.youTubePlayer = youTubePlayer;
-    }
+
 
     public String getId() {
         return id;
