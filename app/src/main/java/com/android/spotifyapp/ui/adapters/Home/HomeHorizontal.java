@@ -2,6 +2,7 @@ package com.android.spotifyapp.ui.adapters.Home;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,6 +16,9 @@ import com.android.spotifyapp.data.network.model.RecentlyPlayed;
 import com.android.spotifyapp.utils.ProgressBar;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHolder> {
     private RecentlyPlayed recentlyPlayed;
@@ -74,23 +78,22 @@ public class HomeHorizontal extends RecyclerView.Adapter<HomeHorizontal.MyViewHo
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView album_image;
-        TextView song_name;
-        TextView artist_name;
-        android.widget.ProgressBar progressBar;
+        @BindView(R.id.album_image) ImageView album_image;
+        @BindView(R.id.song_name)TextView song_name;
+        @BindView(R.id.artist_name) TextView artist_name;
+        @BindView(R.id.progressBar) android.widget.ProgressBar progressBar;
+        @BindView(R.id.recently_play_button) ImageView play_image;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            album_image = itemView.findViewById(R.id.album_image);
-            song_name = itemView.findViewById(R.id.song_name);
-            artist_name = itemView.findViewById(R.id.artist_name);
-            progressBar = itemView.findViewById(R.id.progressBar);
+            ButterKnife.bind(this, itemView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onItemListener.onClick(getAdapterPosition(), recentlyPlayed.getMitems().get(getAdapterPosition()).getTrack().getArtists().get(0).getName() +recentlyPlayed.getMitems().get(getAdapterPosition()).getTrack().getName());
-                }
-            });
+        itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                        play_image.setVisibility(View.VISIBLE);
+            }
+        });
+            itemView.setOnClickListener(view -> onItemListener.onClick(getAdapterPosition(), recentlyPlayed.getMitems().get(getAdapterPosition()).getTrack().getArtists().get(0).getName() +recentlyPlayed.getMitems().get(getAdapterPosition()).getTrack().getName()));
         }
 
     }

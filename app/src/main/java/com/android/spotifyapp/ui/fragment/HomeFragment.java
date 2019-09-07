@@ -1,13 +1,9 @@
 package com.android.spotifyapp.ui.fragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +14,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.spotifyapp.App;
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.ViewModels.HomeViewModel;
 import com.android.spotifyapp.data.ViewModels.MyPlaylistViewModel;
-import com.android.spotifyapp.data.network.model.MyPlaylist;
-import com.android.spotifyapp.data.network.model.MyPlaylistPost;
-import com.android.spotifyapp.data.network.model.RecentlyPlayed;
+import com.android.spotifyapp.data.network.model.Post.MyPlaylistPost;
+import com.android.spotifyapp.data.network.model.Recommendations;
 import com.android.spotifyapp.di.components.DaggerHomeComponent;
 import com.android.spotifyapp.di.components.HomeComponent;
 import com.android.spotifyapp.di.modules.ContextModule;
 import com.android.spotifyapp.di.modules.DialogModule;
-import com.android.spotifyapp.di.modules.HorizontalRecyclerView;
+import com.android.spotifyapp.di.modules.RecyclerViewModule;
 import com.android.spotifyapp.di.modules.ViewModelsModule;
 import com.android.spotifyapp.di.qualifiers.MyPlaylistListQualifier;
 import com.android.spotifyapp.di.qualifiers.RecentlyPlayedQualifier;
@@ -46,10 +42,6 @@ import com.android.spotifyapp.utils.CheckProgressBar;
 import com.android.spotifyapp.utils.Dialogs.Dialog;
 import com.smarteist.autoimageslider.SliderView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -57,12 +49,11 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.app.Activity.RESULT_OK;
 import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
 
 
 
-public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListener, MyPlaylistsAdapter.PlaylistListener {
+public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListener, MyPlaylistsAdapter.PlaylistListener, RecommendedAdapter.onItemListener {
     @Inject @RecentlyPlayedQualifier RecyclerView recyclerView;
     @Inject @MyPlaylistListQualifier RecyclerView MyPlaylistRecyclerView;
     @Inject @RecommendedListQualifier RecyclerView recommendedRecyclerView;
@@ -97,9 +88,9 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
         ButterKnife.bind(this, view);
         //Dagger
         HomeComponent component = DaggerHomeComponent.builder()
-                .horizontalRecyclerView(new HorizontalRecyclerView(view))
-                .appComponent(App.get(Objects.requireNonNull(this.getActivity())).getAppComponent())
-                .viewModelsModule(new ViewModelsModule(this, null))
+        .recyclerViewModule(new RecyclerViewModule(view))
+                .appComponent(((App) Objects.requireNonNull(getActivity()).getApplicationContext()).getAppComponent())
+                .viewModelsModule(new ViewModelsModule(this))
                 .dialogModule(new DialogModule(this))
                 .contextModule(new ContextModule(getActivity()))
                 .build();
@@ -126,6 +117,7 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
 
         //Recommended List
         recommendedRecyclerView.setAdapter(recommendedAdapter);
+        recommendedAdapter.setOnItemListener(this);
         homeViewModel.getRecommendations().observe(getViewLifecycleOwner(), recommendations -> {
             recommended_items.setText(getString(R.string.items, recommendations.getMtracks().size()));
             recommendedAdapter.UpdateData(recommendations);
@@ -143,6 +135,7 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
         return view;
     }
 
+    //Recently played songs on click
     @Override
     public void onClick(int position, String title) {
         CurrentSongState currentSongState = CurrentSongState.getInstance();
@@ -166,7 +159,7 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
 
         switch(item.getItemId()) {
             case R.id.item_add:
-               dialog.dialogshow("Add a new playlist");
+               dialog.dialogshow();
                 return true;
             case R.id.item_delete:
                 if(id != null) {
@@ -181,7 +174,7 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        if(data != null && data.getData() != null)
             dialog.selectResult(data);
 
 
@@ -197,4 +190,21 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
 
 
     }
+    //on recommended artist click
+    @Override
+    public void onClick(Recommendations recommendations, int position) {
+
+        Bundle params = new Bundle();
+        params.putInt("position", position);
+        params.putSerializable("recommendations", recommendations);
+        Fragment artist_fragment = new ArtistFragment();
+        artist_fragment.setArguments(params);
+        Objects.requireNonNull(getActivity())
+                .getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, artist_fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null)
+                .commit();
+    }
 }
+

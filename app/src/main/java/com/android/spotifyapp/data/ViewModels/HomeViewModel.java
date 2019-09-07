@@ -17,7 +17,7 @@ public class HomeViewModel extends AndroidViewModel {
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
-        homeRepository = HomeRepository.getInstance();
+        homeRepository = HomeRepository.getInstance(application);
     }
 
     public LiveData<RecentlyPlayed> getRecentlyPlayedLiveData() {

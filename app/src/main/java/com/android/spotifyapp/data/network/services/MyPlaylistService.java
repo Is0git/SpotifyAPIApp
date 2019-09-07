@@ -1,20 +1,16 @@
 package com.android.spotifyapp.data.network.services;
 
 import com.android.spotifyapp.data.network.model.MyPlaylist;
-import com.android.spotifyapp.data.network.model.MyPlaylistPost;
-
-import java.util.Map;
+import com.android.spotifyapp.data.network.model.Post.MyPlaylistPost;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
 import retrofit2.http.Streaming;
 
 

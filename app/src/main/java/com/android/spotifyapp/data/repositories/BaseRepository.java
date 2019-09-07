@@ -1,9 +1,11 @@
 package com.android.spotifyapp.data.repositories;
 
+import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.android.spotifyapp.App;
 import com.android.spotifyapp.data.network.model.User;
 import com.android.spotifyapp.data.network.services.UserService;
 import com.android.spotifyapp.di.components.AppComponent;
@@ -33,27 +35,26 @@ public class BaseRepository {
     private MutableLiveData<User> mutableLiveData;
     private CompositeDisposable compositeDisposable;
     private static BaseRepository baseRepository_instance;
-    private BaseRepository() {
+    private BaseRepository(Application application) {
         mutableLiveData = new MutableLiveData<>();
         compositeDisposable = new CompositeDisposable();
+
+        BaseComponent component = DaggerBaseComponent.builder()
+                .appComponent(((App) application.getApplicationContext()).getAppComponent())
+                .activityViewModelModule(new ActivityViewModelModule(null))
+                .build();
+        component.inject(this);
     }
 
-    public static BaseRepository getInstance() {
+    public static BaseRepository getInstance(Application application) {
         if(baseRepository_instance == null) {
-            baseRepository_instance = new BaseRepository();
+            baseRepository_instance = new BaseRepository(application);
         }
         return baseRepository_instance;
     }
 
     public MutableLiveData<User> getUser() {
-        BaseComponent component = DaggerBaseComponent.builder().appComponent(new AppComponent() {
-            @Override
-            public Retrofit getRetrofit() {
-                AppComponent appComponent = DaggerAppComponent.create();
-                return appComponent.getRetrofit();
-            }
-        }).activityViewModelModule(new ActivityViewModelModule(null)).build();
-        component.inject(this);
+
 
         userService = retrofit.create(UserService.class);
         Observable<User>observable = userService.getUser("Bearer " + ACCESS_TOKEN);

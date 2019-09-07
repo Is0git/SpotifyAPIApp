@@ -84,9 +84,11 @@ public class MyPlaylistsAdapter extends RecyclerView.Adapter<MyPlaylistsAdapter.
         @BindView(R.id.playlist_title) TextView playlist_title;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, view);
+            ButterKnife.bind(this, itemView);
             itemView.setOnLongClickListener(view -> {
-                playlistListener.onPlaylistItemClick(myPlaylist.getMitems().get(getAdapterPosition()).getId());
+                if(getAdapterPosition() >= 0) {
+                    playlistListener.onPlaylistItemClick(myPlaylist.getMitems().get(getAdapterPosition()).getId());
+                }
                 return false;
             });
 
@@ -94,7 +96,6 @@ public class MyPlaylistsAdapter extends RecyclerView.Adapter<MyPlaylistsAdapter.
 
 
     }
-// playlistListener.onPlaylistItemClick(getAdapterPosition(), myPlaylist);
     public interface PlaylistListener {
 
         void onPlaylistItemClick(String id);

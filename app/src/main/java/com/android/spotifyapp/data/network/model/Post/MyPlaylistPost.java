@@ -1,4 +1,4 @@
-package com.android.spotifyapp.data.network.model;
+package com.android.spotifyapp.data.network.model.Post;
 
 import com.google.gson.annotations.SerializedName;
 

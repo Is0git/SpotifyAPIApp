@@ -285,6 +285,5 @@
       android:layout_height="1dp"
       android:background="@color/colorMediumDarker"
       android:layout_alignParentBottom="true"/>
-
 </RelativeLayout>
 </ScrollView>

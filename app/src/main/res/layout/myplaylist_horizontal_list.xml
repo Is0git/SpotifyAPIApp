@@ -44,11 +44,12 @@
                 android:layout_marginTop="3dp"
                 android:textSize="11sp"
                 android:letterSpacing="1"
-                android:text="@string/playlist_items"
+                android:text="@string/_0_items"
                 android:fontFamily="@font/quicksand"
                 android:textColor="@color/colorPrimary"
                 android:textAlignment="center"
                 tools:ignore="SmallSp" />
+
         </RelativeLayout>
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/progressBarMyPlaylist"
@@ -60,5 +61,6 @@
             app:SpinKit_Color="@color/colorAccent"
             android:layout_centerInParent="true" />
     </androidx.cardview.widget.CardView>
+
 
 </RelativeLayout>

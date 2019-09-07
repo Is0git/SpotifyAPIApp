@@ -38,6 +38,8 @@ public class YoutubePlayerRepository {
     private YoutubePlayerRepository() {
         youtubeVideosMutableLiveData = new MutableLiveData<>();
         disposable = new CompositeDisposable();
+        YoutubeComponent youtubeComponent = DaggerYoutubeComponent.builder().viewModelsModule(new ViewModelsModule(null)).build();
+        youtubeComponent.inject(this);
     }
 
     public static YoutubePlayerRepository getInstance() {
@@ -49,8 +51,6 @@ public class YoutubePlayerRepository {
 
 
     public LiveData<YoutubeVideos> getVideos(String part, int maxResults, String q, String type) {
-        YoutubeComponent youtubeComponent = DaggerYoutubeComponent.builder().viewModelsModule(new ViewModelsModule(null, null)).build();
-        youtubeComponent.inject(this);
         youtubeService = retrofit.create(YoutubeService.class);
         Observable<YoutubeVideos>observable = youtubeService.getVideos(part, maxResults, q, type, YoutubeAPIContract.getApiKey());
         observable

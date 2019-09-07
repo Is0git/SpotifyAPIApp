@@ -13,9 +13,13 @@ import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.network.model.Recommendations;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.MyViewHolder> {
     private Recommendations recommendations;
     private View view;
+    private onItemListener onItemListener;
 
     public RecommendedAdapter() {
       recommendations = new Recommendations();
@@ -51,17 +55,29 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
         return 0;
     }
 
+    public void setOnItemListener(RecommendedAdapter.onItemListener onItemListener) {
+        this.onItemListener = onItemListener;
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView artist;
-        ImageView artist_image;
-        TextView followers;
+        @BindView(R.id.artist_name2) TextView artist;
+        @BindView(R.id.artist_image)ImageView artist_image;
+        @BindView(R.id.followers)TextView followers;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            artist = itemView.findViewById(R.id.artist_name2);
-            artist_image = itemView.findViewById(R.id.artist_image);
-            followers = itemView.findViewById(R.id.followers);
+            ButterKnife.bind(this, itemView);
+
+                itemView.setOnClickListener(view -> {
+                    if(getAdapterPosition() >= 0) {
+                        onItemListener.onClick(recommendations, getAdapterPosition());
+                    }
+                });
 
         }
+    }
+
+    public interface onItemListener {
+        public void onClick(Recommendations recommendations, int position);
     }
 }

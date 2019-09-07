@@ -8,14 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.ViewModels.YoutubePlayerViewmodel;
 import com.android.spotifyapp.data.network.model.YoutubeVideos;
@@ -30,9 +28,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import org.jetbrains.annotations.NotNull;
-
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -47,7 +43,7 @@ public class YoutubeFragment extends Fragment  {
     @BindView(R.id.song_loading) RelativeLayout relativeLayout;
     private FragmentManager fragmentManager;
     @Inject YoutubePlayerViewmodel youtubePlayerViewmodel;
-    CurrentSongState currentSongState;
+    private CurrentSongState currentSongState;
 
 
     @Nullable
@@ -55,7 +51,7 @@ public class YoutubeFragment extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.youtube_fragment, container, false);
         ButterKnife.bind(this, view);
-        YoutubeComponent component = DaggerYoutubeComponent.builder().youtubeModule(new YoutubeModule()).viewModelsModule(new ViewModelsModule(null, this)).build();
+        YoutubeComponent component = DaggerYoutubeComponent.builder().youtubeModule(new YoutubeModule()).viewModelsModule(new ViewModelsModule(this)).build();
         component.injectFragment(this);
         fragmentManager = getFragmentManager();
         currentSongState = CurrentSongState.getInstance();
@@ -73,7 +69,7 @@ public class YoutubeFragment extends Fragment  {
             @Override
             public void onReady(@NotNull YouTubePlayer youTubePlayer) {
                 super.onReady(youTubePlayer);
-                currentSongState.setYouTubePlayer(youTubePlayer);
+                currentSongState.setYouTubePlayer(youTubePlayer); // TODO FIX MEMORY LEAK
                 if(currentSongState.getId() != null) {
                     Log.d("Clickeded", "onReady: " + currentSongState.getId());
                     youTubePlayer.loadVideo(currentSongState.getId(), 0f);
@@ -103,6 +99,10 @@ public class YoutubeFragment extends Fragment  {
                     case PAUSED:
                     case ENDED:
                         player_icon.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                        break;
+                    case BUFFERING:
+                        player_icon.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                        relativeLayout.setVisibility(View.VISIBLE);
                         break;
                     case PLAYING:
                         player_icon.setImageResource(R.drawable.ic_pause_black_24dp);

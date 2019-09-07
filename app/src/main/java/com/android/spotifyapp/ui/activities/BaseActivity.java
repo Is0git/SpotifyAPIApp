@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
 import com.android.spotifyapp.App;
@@ -36,11 +37,12 @@ import butterknife.ButterKnife;
 import static com.android.spotifyapp.utils.ActionBarSettings.SetActionBar;
 import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.USER_ID;
 
-public class BaseActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener {
+public class BaseActivity extends AppCompatActivity {
     @BindView(R.id.bottom_nav) BottomNavigationView bottomNavigationView;
     ImageView user_image;
     @Inject BaseViewModel viewModel;
     View actionbar;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +58,7 @@ public class BaseActivity extends AppCompatActivity implements YouTubePlayer.OnI
 
 
         //Dagger
-        BaseComponent component = DaggerBaseComponent.builder().appComponent(App.get(Objects.requireNonNull(this))
-                .getAppComponent())
+        BaseComponent component = DaggerBaseComponent.builder().appComponent(((App) getApplicationContext()).getAppComponent())
                 .activityViewModelModule(new ActivityViewModelModule(this))
                 .build();
         component.injectActivity(this);
@@ -65,17 +66,14 @@ public class BaseActivity extends AppCompatActivity implements YouTubePlayer.OnI
 
 
 
-        viewModel.getUser().observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
+        viewModel.getUser().observe(this, user -> {
 
-                Log.d("BASETAG", "onChangeds: " + user_image);
-                Picasso.with(getApplicationContext())
-                        .load(user.getMimages().get(0).getUrl())
-                        .fit().into(user_image);
-
-               USER_ID = user.getId();
-            }
+            Log.d("BASETAG", "onChangeds: " + user_image);
+            Picasso.with(getApplicationContext())
+                    .load(user.getMimages().get(0).getUrl())
+                    .fit().into(user_image);
+            this.user = user;
+           USER_ID = user.getId();
         });
 
         //Fragments
@@ -95,21 +93,13 @@ public class BaseActivity extends AppCompatActivity implements YouTubePlayer.OnI
         });
     }
 
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
 
-        youTubePlayer.loadVideo("XKxwV1ETTfc");
-        youTubePlayer.pause();
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-
-    }
 
     public void startPlayer() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.youtube_fragment, new YoutubeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.youtube_fragment, new YoutubeFragment()).commit();
     }
 
-
+    public User getUser() {
+        return user;
+    }
 }

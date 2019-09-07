@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.android.spotifyapp.data.network.model.MyPlaylist;
-import com.android.spotifyapp.data.network.model.MyPlaylistPost;
+import com.android.spotifyapp.data.network.model.Post.MyPlaylistPost;
 import com.android.spotifyapp.data.repositories.MyPlaylistRepository;
 
 public class MyPlaylistViewModel extends AndroidViewModel {

@@ -2,9 +2,10 @@ package com.android.spotifyapp.data.network.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Recommendations {
+public class Recommendations implements Serializable {
     @SerializedName("tracks")
     private List<Tracks> mtracks;
     @SerializedName("seeds")

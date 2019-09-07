@@ -13,6 +13,9 @@ import com.smarteist.autoimageslider.SliderViewAdapter;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.android.spotifyapp.utils.TAGS.TAG4;
 
 public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapterVH> {
@@ -65,15 +68,14 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
     }
     class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
 
-        TextView slider_title;
-        ImageView slider_image;
-        ProgressBar progressBar;
+        @BindView(R.id.slider_title)  TextView slider_title;
+        @BindView(R.id.slider_image)ImageView slider_image;
+        @BindView(R.id.progressBar_slider_bg)ProgressBar progressBar;
 
         public SliderAdapterVH(android.view.View itemView) {
             super(itemView);
-            slider_title = itemView.findViewById(R.id.slider_title);
-            slider_image = itemView.findViewById(R.id.slider_image);
-            progressBar = itemView.findViewById(R.id.progressBar_slider_bg);
+            ButterKnife.bind(this, itemView);
+
         }
     }
 }

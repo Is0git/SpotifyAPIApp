@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.spotifyapp.data.network.model.MyPlaylist;
-import com.android.spotifyapp.data.network.model.MyPlaylistPost;
+import com.android.spotifyapp.data.network.model.Post.MyPlaylistPost;
 import com.android.spotifyapp.data.network.services.MyPlaylistService;
 import com.android.spotifyapp.di.components.DaggerMyplaylistComponent;
 import com.android.spotifyapp.di.components.MyplaylistComponent;

@@ -46,10 +46,8 @@ public class Dialog {
         storageReference = FirebaseStorage.getInstance().getReference();
         fragment = homeFragment;
         image_url = Uri.parse("null");
-
-
     }
-    public void dialogshow(String title) {
+    public void dialogshow() {
         view = LayoutInflater.from(context).inflate(R.layout.dialog_layout, null, false);
         ButterKnife.bind(this, view);
         alertDialog = new AlertDialog.Builder(context).create();
@@ -59,15 +57,13 @@ public class Dialog {
     }
 
     @OnClick(R.id.playlist_image_upload) void OnImagageclick() {
-        Log.d("REAL", "Onclick: "  + "CLICKED");
         startActivityFromResult(fragment);
 
     }
 
     @OnClick(R.id.button_create) void OnButtonClick() {
             if(dialog_description_editText.getText().toString().isEmpty() || dialog_title_editText.getText().toString().isEmpty()) {
-                Toast.makeText(context, "FEEL ALL SHIT BOI", Toast.LENGTH_SHORT).show();
-                Log.d("REAL", "OnButtonClick: " );
+                Toast.makeText(context, "Title or description cannot be empty", Toast.LENGTH_SHORT).show();
                 return;
             }
         ((HomeFragment) fragment).setData(dialog_title_editText.getText().toString(), dialog_description_editText.getText().toString(), image_url.toString(), public_switch.isChecked());
@@ -80,7 +76,6 @@ public class Dialog {
         storageReference.child("images/" + "profile.jpg").putFile(image_uri)
                 .addOnSuccessListener(taskSnapshot -> {
 
-                    Log.d("REAL", "onSuccess: ");
                     Picasso.with(view.getContext())
                             .load(image_uri)
                             .fit()
@@ -90,7 +85,6 @@ public class Dialog {
                                     storageReference.child("images/" + "profile.jpg").getDownloadUrl().addOnSuccessListener(uri -> {
                                         image_url = uri;
                                         ButtonAccess.enable(create);
-                                        Log.d("REAL", "selectResult: " + String.valueOf(uri));
                                     });
                                     com.android.spotifyapp.utils.ProgressBar.progressBarUnvisible(progressBar);
                                 }
@@ -107,7 +101,7 @@ public class Dialog {
 
     }
 
-    public void startActivityFromResult(Fragment fragment) {
+    private void startActivityFromResult(Fragment fragment) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         fragment.startActivityForResult(intent, 1);
