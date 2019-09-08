@@ -25,52 +25,58 @@ import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.CLIENT_
 import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.REDIRECT_URL;
 
 public class AuthRepository {
-    @Inject
-            @AuthQualifier
-    Retrofit retrofit;
     private static AuthRepository authRepository_instance = null;
+    @Inject
+    @AuthQualifier
+    Retrofit retrofit;
     private CompositeDisposable compositeDisposable;
-    private AuthRepository(){compositeDisposable = new CompositeDisposable();}
+
+    private AuthRepository() {
+        compositeDisposable = new CompositeDisposable();
+    }
+
     public static AuthRepository getInstance() {
 
-        if(authRepository_instance == null) {
+        if (authRepository_instance == null) {
             authRepository_instance = new AuthRepository();
         }
         return authRepository_instance;
     }
-        public LiveData<AccessToken> getAccess(String code) {
+
+    public LiveData<AccessToken> getAccess(String code) {
         final MutableLiveData<AccessToken> access_data = new MutableLiveData<>();
         LoginComponent loginComponent = DaggerLoginComponent.create();
         loginComponent.inject(this);
         AuthService authService = retrofit.create(AuthService.class);
-            Observable<AccessToken> observable = authService.getAccessToken(CLIENT_ID, CLIENT_SECRET, code, REDIRECT_URL, AUTH_CODE);
-            observable.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<AccessToken>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
+        Observable<AccessToken> observable = authService.getAccessToken(CLIENT_ID, CLIENT_SECRET, code, REDIRECT_URL, AUTH_CODE);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<AccessToken>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onNext(AccessToken accessToken) {
-                            access_data.setValue(accessToken);
+                    @Override
+                    public void onNext(AccessToken accessToken) {
+                        access_data.setValue(accessToken);
 
-                        }
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onComplete() {
+                    @Override
+                    public void onComplete() {
 
-                        }
-                    });
+                    }
+                });
 
         return access_data;
     }
+
     public CompositeDisposable getDisposables() {
         return compositeDisposable;
     }

@@ -1,7 +1,7 @@
 package com.android.spotifyapp.ui.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,12 +9,10 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 
 import com.android.spotifyapp.App;
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.ViewModels.BaseViewModel;
-import com.android.spotifyapp.data.network.model.RecentlyPlayed;
 import com.android.spotifyapp.data.network.model.User;
 import com.android.spotifyapp.di.components.BaseComponent;
 import com.android.spotifyapp.di.components.DaggerBaseComponent;
@@ -22,12 +20,9 @@ import com.android.spotifyapp.di.modules.ActivityViewModelModule;
 import com.android.spotifyapp.ui.fragment.HomeFragment;
 import com.android.spotifyapp.ui.fragment.PlaylistFragment;
 import com.android.spotifyapp.ui.fragment.YoutubeFragment;
+import com.android.spotifyapp.utils.SharedPreferencesUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
 import com.squareup.picasso.Picasso;
-
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -35,14 +30,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.android.spotifyapp.utils.ActionBarSettings.SetActionBar;
-import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.USER_ID;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.shared_preferences_name;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.user_country;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.user_id;
 
 public class BaseActivity extends AppCompatActivity {
     @BindView(R.id.bottom_nav) BottomNavigationView bottomNavigationView;
     ImageView user_image;
     @Inject BaseViewModel viewModel;
     View actionbar;
-    User user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +50,8 @@ public class BaseActivity extends AppCompatActivity {
 
         //ActionBar
         actionbar  = LayoutInflater.from(this).inflate(R.layout.actionbar, null);
-        SetActionBar(this, actionbar);
         user_image = actionbar.findViewById(R.id.action_user);
-
+        SetActionBar(this, actionbar);
 
         //Dagger
         BaseComponent component = DaggerBaseComponent.builder().appComponent(((App) getApplicationContext()).getAppComponent())
@@ -67,13 +63,10 @@ public class BaseActivity extends AppCompatActivity {
 
 
         viewModel.getUser().observe(this, user -> {
-
-            Log.d("BASETAG", "onChangeds: " + user_image);
             Picasso.with(getApplicationContext())
                     .load(user.getMimages().get(0).getUrl())
                     .fit().into(user_image);
-            this.user = user;
-           USER_ID = user.getId();
+            saveUser(user);
         });
 
         //Fragments
@@ -93,13 +86,15 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
-
+    public void saveUser(User user) {
+        SharedPreferences.Editor editor = SharedPreferencesUtil.getPreferences(shared_preferences_name, getApplicationContext()).edit();
+        editor.putString(user_id, user.getId());
+        editor.putString(user_country, user.getCountry());
+        editor.apply();
+    }
 
     public void startPlayer() {
-        getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.youtube_fragment, new YoutubeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.youtube_fragment, new YoutubeFragment()).commit();
     }
 
-    public User getUser() {
-        return user;
-    }
 }

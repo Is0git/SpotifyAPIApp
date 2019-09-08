@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -18,24 +18,20 @@ import com.android.spotifyapp.App;
 import com.android.spotifyapp.R;
 import com.android.spotifyapp.data.ViewModels.ArtistViewModel;
 import com.android.spotifyapp.data.network.model.Recommendations;
-import com.android.spotifyapp.data.network.model.byId.ArtistTopTracks;
-import com.android.spotifyapp.data.network.model.byId.RelatedArtists;
 import com.android.spotifyapp.di.components.ArtistComponent;
 import com.android.spotifyapp.di.components.DaggerArtistComponent;
 import com.android.spotifyapp.di.modules.AdaptersModule;
 import com.android.spotifyapp.di.modules.ContextModule;
 import com.android.spotifyapp.di.modules.RecyclerViewModule;
 import com.android.spotifyapp.di.modules.ViewModelsModule;
-import com.android.spotifyapp.di.qualifiers.ArtistsAlbumsRecyclerViewQualifier;
 import com.android.spotifyapp.di.qualifiers.RelatedArtistsRecyclerViewQualifier;
 import com.android.spotifyapp.di.qualifiers.TopSongRecyclerViewQualifier;
-import com.android.spotifyapp.ui.activities.BaseActivity;
 import com.android.spotifyapp.ui.adapters.Artist.AlbumAdapter;
 import com.android.spotifyapp.ui.adapters.Artist.RelatedArtistsAdapter;
 import com.android.spotifyapp.ui.adapters.Artist.TopSongsAdapter;
 import com.android.spotifyapp.utils.CheckProgressBar;
 import com.android.spotifyapp.utils.Piccaso;
-import com.squareup.picasso.Picasso;
+import com.android.spotifyapp.utils.SharedPreferencesUtil;
 
 import java.util.Objects;
 
@@ -43,6 +39,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.shared_preferences_name;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.user_country;
 
 public class ArtistFragment extends Fragment {
     @BindView(R.id.artist_photo) ImageView artist_image;
@@ -112,7 +111,7 @@ public class ArtistFragment extends Fragment {
 
         //Artist's top songs data
         songs_recyclerView.setAdapter(topSongsAdapter);
-        viewModel.getTopTracks(recommendations.getMtracks().get(position).getMartists().get(0).getId(), ((BaseActivity) getActivity()).getUser().getCountry()).observe(getViewLifecycleOwner(), artistTopTracks -> {
+        viewModel.getTopTracks(recommendations.getMtracks().get(position).getMartists().get(0).getId(), SharedPreferencesUtil.getPreferences(shared_preferences_name, getActivity().getApplicationContext()).getString(user_country, "UK")).observe(getViewLifecycleOwner(), artistTopTracks -> {
             top_track_items.setText(getString(R.string.items, artistTopTracks.getTracks().size()));
             topSongsAdapter.updateData(artistTopTracks);
             CheckProgressBar.checkprogressBar(songs_recyclerView, progress_bar_top_tracks);

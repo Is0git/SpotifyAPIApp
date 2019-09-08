@@ -40,6 +40,7 @@ import com.android.spotifyapp.ui.adapters.Home.RecommendedAdapter;
 import com.android.spotifyapp.ui.adapters.Home.SliderAdapter;
 import com.android.spotifyapp.utils.CheckProgressBar;
 import com.android.spotifyapp.utils.Dialogs.Dialog;
+import com.android.spotifyapp.utils.SharedPreferencesUtil;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.util.Objects;
@@ -49,7 +50,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.access_token;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.shared_preferences_auth;
 
 
 
@@ -109,7 +111,8 @@ public class HomeFragment extends Fragment implements HomeHorizontal.OnItemListe
         //MyPlaylist List
         MyPlaylistRecyclerView.setAdapter(myPlaylistsAdapter);
         myPlaylistsAdapter.setPlaylistListener(this);
-        myPlaylistViewModel.getMyPlaylistLiveData("Bearer " + ACCESS_TOKEN).observe(getViewLifecycleOwner(), myPlaylist -> {
+        myPlaylistViewModel.getMyPlaylistLiveData("Bearer " + SharedPreferencesUtil.getPreferences(shared_preferences_auth, getActivity().getApplicationContext()).getString(access_token, null))
+                .observe(getViewLifecycleOwner(), myPlaylist -> {
             my_playlist_items.setText(getString(R.string.items, myPlaylist.getMitems().size()));
             myPlaylistsAdapter.UpdateList(myPlaylist);
             CheckProgressBar.checkprogressBar(MyPlaylistRecyclerView, progressBar_playlists);

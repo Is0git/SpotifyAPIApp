@@ -15,7 +15,7 @@ public class MyPlaylistViewModel extends AndroidViewModel {
     private MyPlaylistRepository myPlaylistRepository;
     public MyPlaylistViewModel(@NonNull Application application) {
         super(application);
-        myPlaylistRepository = MyPlaylistRepository.getInstance();
+        myPlaylistRepository = MyPlaylistRepository.getInstance(application);
     }
     public LiveData<MyPlaylist> getMyPlaylistLiveData(String access_token) {
         this.myPlaylistLiveData = myPlaylistRepository.getMyPlaylist(access_token);

@@ -19,6 +19,7 @@ import com.android.spotifyapp.di.modules.DialogModule;
 import com.android.spotifyapp.di.modules.RecyclerViewModule;
 import com.android.spotifyapp.di.modules.ViewModelsModule;
 import com.android.spotifyapp.di.qualifiers.RetrofitQualifier;
+import com.android.spotifyapp.utils.SharedPreferencesUtil;
 
 import javax.inject.Inject;
 
@@ -32,7 +33,8 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
-import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.access_token;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.shared_preferences_auth;
 import static com.android.spotifyapp.utils.TAGS.TAG;
 import static com.android.spotifyapp.utils.TAGS.TAG4;
 
@@ -46,12 +48,14 @@ public class HomeRepository {
     private MediatorLiveData mediatorLiveData;
     private Recommendations recommendationsHelper;
     private CompositeDisposable compositeDisposable;
+    private String token;
     private static HomeRepository homeRepository_instance;
     private HomeRepository(Application application) {
         userTopTracksMutableLiveData = new MutableLiveData<>();
         compositeDisposable = new CompositeDisposable();
         recentlyPlayedMutableLiveData = new MutableLiveData<>();
         mediatorLiveData = new MediatorLiveData();
+        token = SharedPreferencesUtil.getPreferences(shared_preferences_auth, application).getString(access_token, "NO TOKEN");
 
         HomeComponent homeComponent = DaggerHomeComponent.builder()
                 .recyclerViewModule(new RecyclerViewModule(null))
@@ -74,7 +78,7 @@ public class HomeRepository {
 
 
         homeService = retrofit.create(HomeService.class);
-        Observable<RecentlyPlayed>observable = homeService.getRecentlyPlayed("Bearer " + ACCESS_TOKEN);
+        Observable<RecentlyPlayed> observable = homeService.getRecentlyPlayed("Bearer " + token);
         observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -136,7 +140,7 @@ public class HomeRepository {
         return recommendationsMutableLiveData;
     }
     private Observable<Recommendations.Tracks> getRecommendationsObservable() {
-        return homeService.getRecommendations("Bearer " + ACCESS_TOKEN, "pop")
+        return homeService.getRecommendations("Bearer " + token, "pop")
               .subscribeOn(Schedulers.io())
                 .flatMap((Function<Recommendations, ObservableSource<Recommendations.Tracks>>) recommendations -> {
                     recommendationsHelper = recommendations;
@@ -145,7 +149,7 @@ public class HomeRepository {
 
     }
     private Observable<Recommendations.Tracks> getModifiedObservable(final Recommendations.Tracks tracks) {
-        return homeService.getArtist("Bearer " + ACCESS_TOKEN, tracks.getMartists().get(0).getId())
+        return homeService.getArtist("Bearer " + token, tracks.getMartists().get(0).getId())
                 .map(artist -> {
                     tracks.setArtist(artist);
                     recommendationsHelper.getMtracks().set(recommendationsHelper.getMtracks().indexOf(tracks), tracks);
@@ -154,7 +158,7 @@ public class HomeRepository {
     }
 
     public MutableLiveData<UserTopTracks> getUserTopTracks(int limit) {
-        Observable<UserTopTracks> observable = homeService.getUserTopTracks("Bearer " + ACCESS_TOKEN, "tracks", limit);
+        Observable<UserTopTracks> observable = homeService.getUserTopTracks("Bearer " + token, "tracks", limit);
         observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

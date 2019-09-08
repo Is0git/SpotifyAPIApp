@@ -1,6 +1,7 @@
 package com.android.spotifyapp.data.repositories;
 
-
+import android.app.Application;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -12,6 +13,7 @@ import com.android.spotifyapp.data.network.services.MyPlaylistService;
 import com.android.spotifyapp.di.components.DaggerMyplaylistComponent;
 import com.android.spotifyapp.di.components.MyplaylistComponent;
 import com.android.spotifyapp.di.qualifiers.RetrofitQualifier;
+import com.android.spotifyapp.utils.SharedPreferencesUtil;
 
 import javax.inject.Inject;
 
@@ -26,8 +28,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
-import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.USER_ID;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.access_token;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.shared_preferences_auth;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.user_id;
 
 public class MyPlaylistRepository {
     @Inject
@@ -38,17 +41,20 @@ public class MyPlaylistRepository {
     private CompositeDisposable compositeDisposable;
     private MyPlaylistService myPlaylistService;
     private static MyPlaylistRepository myPlaylistRepository_instance = null;
-    private MyPlaylistRepository() {
+    private SharedPreferences sharedPreferences;
+    private String token;
+    private MyPlaylistRepository(Application application) {
         myPlaylistMutableLiveData = new MutableLiveData<>();
         compositeDisposable = new CompositeDisposable();
+        token = SharedPreferencesUtil.getPreferences(shared_preferences_auth, application).getString(access_token, "NO TOKEN");
         MyplaylistComponent myplaylistComponent = DaggerMyplaylistComponent.create();
         myplaylistComponent.inject(this);
         myPlaylistService =  retrofit.create(MyPlaylistService.class);
 
     }
-    public static MyPlaylistRepository getInstance() {
+    public static MyPlaylistRepository getInstance(Application application) {
         if(myPlaylistRepository_instance == null) {
-            myPlaylistRepository_instance = new MyPlaylistRepository();
+            myPlaylistRepository_instance = new MyPlaylistRepository(application);
         }
         return myPlaylistRepository_instance;
     }
@@ -85,7 +91,7 @@ public class MyPlaylistRepository {
     }
     public void delete_playlist(String playlist_id) {
             MyPlaylistService myPlaylistService = retrofit.create(MyPlaylistService.class);
-            Call<Void> call =  myPlaylistService.deletePlaylist("Bearer " + ACCESS_TOKEN, playlist_id);
+            Call<Void> call =  myPlaylistService.deletePlaylist("Bearer " + token, playlist_id);
             call.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
@@ -100,7 +106,7 @@ public class MyPlaylistRepository {
     }
 
     public void createNewPlaylist(MyPlaylistPost myPlaylistPost) {
-        Call<Void> call = myPlaylistService.addPlaylist("Bearer " + ACCESS_TOKEN, myPlaylistPost, USER_ID);
+        Call<Void> call = myPlaylistService.addPlaylist("Bearer " + token, myPlaylistPost, sharedPreferences.getString(user_id, null));
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -117,7 +123,7 @@ public class MyPlaylistRepository {
     }
 
     public void refreshPlaylist() {
-        getMyPlaylist("Bearer " + ACCESS_TOKEN);
+        getMyPlaylist("Bearer " + token);
     }
     public CompositeDisposable getDisposables() {
         return compositeDisposable;

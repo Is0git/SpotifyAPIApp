@@ -11,10 +11,7 @@ import com.android.spotifyapp.di.components.DaggerYoutubeComponent;
 import com.android.spotifyapp.di.components.YoutubeComponent;
 import com.android.spotifyapp.di.modules.ViewModelsModule;
 import com.android.spotifyapp.di.qualifiers.YoutubeQualifier;
-import com.android.spotifyapp.ui.GlobalState.CurrentSongState;
 import com.android.spotifyapp.utils.Contracts.YoutubeAPIContract;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 
 import javax.inject.Inject;
 
@@ -27,14 +24,14 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
 public class YoutubePlayerRepository {
-    private YoutubeService youtubeService;
-    private CompositeDisposable disposable;
-    private MutableLiveData<YoutubeVideos> youtubeVideosMutableLiveData;
+    private static YoutubePlayerRepository playerRepository_instance;
     @YoutubeQualifier
     @Inject
     Retrofit retrofit;
+    private YoutubeService youtubeService;
+    private CompositeDisposable disposable;
+    private MutableLiveData<YoutubeVideos> youtubeVideosMutableLiveData;
 
-    private static YoutubePlayerRepository playerRepository_instance;
     private YoutubePlayerRepository() {
         youtubeVideosMutableLiveData = new MutableLiveData<>();
         disposable = new CompositeDisposable();
@@ -43,7 +40,7 @@ public class YoutubePlayerRepository {
     }
 
     public static YoutubePlayerRepository getInstance() {
-        if(playerRepository_instance == null) {
+        if (playerRepository_instance == null) {
             playerRepository_instance = new YoutubePlayerRepository();
         }
         return playerRepository_instance;
@@ -52,14 +49,14 @@ public class YoutubePlayerRepository {
 
     public LiveData<YoutubeVideos> getVideos(String part, int maxResults, String q, String type) {
         youtubeService = retrofit.create(YoutubeService.class);
-        Observable<YoutubeVideos>observable = youtubeService.getVideos(part, maxResults, q, type, YoutubeAPIContract.getApiKey());
+        Observable<YoutubeVideos> observable = youtubeService.getVideos(part, maxResults, q, type, YoutubeAPIContract.getApiKey());
         observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<YoutubeVideos>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                            disposable.add(d);
+                        disposable.add(d);
                     }
 
                     @Override

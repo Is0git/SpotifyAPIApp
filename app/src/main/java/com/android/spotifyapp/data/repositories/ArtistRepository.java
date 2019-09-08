@@ -1,8 +1,10 @@
 package com.android.spotifyapp.data.repositories;
 
 import android.app.Application;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import com.android.spotifyapp.App;
 import com.android.spotifyapp.data.network.model.byId.ArtistTopTracks;
 import com.android.spotifyapp.data.network.model.byId.ArtistsAlbum;
@@ -15,7 +17,10 @@ import com.android.spotifyapp.di.modules.ContextModule;
 import com.android.spotifyapp.di.modules.RecyclerViewModule;
 import com.android.spotifyapp.di.modules.ViewModelsModule;
 import com.android.spotifyapp.di.qualifiers.RetrofitQualifier;
+import com.android.spotifyapp.utils.SharedPreferencesUtil;
+
 import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -24,7 +29,9 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
-import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.access_token;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.shared_preferences_auth;
+
 
 public class ArtistRepository {
     private static ArtistRepository artistRepository;
@@ -33,7 +40,7 @@ public class ArtistRepository {
     private MutableLiveData<ArtistTopTracks> artistTopTracksMutableLiveData;
     private MutableLiveData<RelatedArtists> relatedArtistsMutableLiveData;
     private CompositeDisposable disposable;
-
+    private String token;
 
     @Inject
     @RetrofitQualifier
@@ -44,6 +51,7 @@ public class ArtistRepository {
         artistTopTracksMutableLiveData = new MutableLiveData<>();
         relatedArtistsMutableLiveData = new MutableLiveData<>();
         disposable = new CompositeDisposable();
+        token = SharedPreferencesUtil.getPreferences(shared_preferences_auth, application).getString(access_token, "NO TOKEN");
         ArtistComponent artistComponent  =  DaggerArtistComponent.builder()
                 .appComponent(((App) application.getApplicationContext()).getAppComponent())
                 .viewModelsModule(new ViewModelsModule(null))
@@ -63,7 +71,7 @@ public class ArtistRepository {
 
     public LiveData<ArtistsAlbum> getAlbums(String id) {
         artistService = retrofit.create(ArtistService.class);
-        Observable<ArtistsAlbum> artistsAlbumObservable = artistService.getArtistAlbum("Bearer " + ACCESS_TOKEN, id);
+        Observable<ArtistsAlbum> artistsAlbumObservable = artistService.getArtistAlbum("Bearer " + token, id);
         artistsAlbumObservable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -91,7 +99,7 @@ public class ArtistRepository {
     }
 
     public LiveData<ArtistTopTracks> getTopTracks(String id, String country) {
-        Observable<ArtistTopTracks> artistTopTracksObservable = artistService.getArtistTopTracks("Bearer " + ACCESS_TOKEN, id, country);
+        Observable<ArtistTopTracks> artistTopTracksObservable = artistService.getArtistTopTracks("Bearer " + token, id, country);
         artistTopTracksObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -120,7 +128,7 @@ public class ArtistRepository {
     }
 
     public LiveData<RelatedArtists> getRelatedArtistsLiveData(String id) {
-        Observable<RelatedArtists> relatedArtistsObservable = artistService.getRelatedArtistsObservable("Bearer " + ACCESS_TOKEN, id);
+        Observable<RelatedArtists> relatedArtistsObservable = artistService.getRelatedArtistsObservable("Bearer " + token, id);
         relatedArtistsObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

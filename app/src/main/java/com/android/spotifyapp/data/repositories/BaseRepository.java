@@ -8,12 +8,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.spotifyapp.App;
 import com.android.spotifyapp.data.network.model.User;
 import com.android.spotifyapp.data.network.services.UserService;
-import com.android.spotifyapp.di.components.AppComponent;
 import com.android.spotifyapp.di.components.BaseComponent;
-import com.android.spotifyapp.di.components.DaggerAppComponent;
 import com.android.spotifyapp.di.components.DaggerBaseComponent;
 import com.android.spotifyapp.di.modules.ActivityViewModelModule;
 import com.android.spotifyapp.di.qualifiers.RetrofitQualifier;
+import com.android.spotifyapp.utils.SharedPreferencesUtil;
 
 import javax.inject.Inject;
 
@@ -25,7 +24,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
-import static com.android.spotifyapp.utils.Contracts.SpotifyAuthContract.ACCESS_TOKEN;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.access_token;
+import static com.android.spotifyapp.utils.Contracts.SharedPreferencesContract.shared_preferences_auth;
 
 public class BaseRepository {
     @Inject
@@ -35,10 +35,11 @@ public class BaseRepository {
     private MutableLiveData<User> mutableLiveData;
     private CompositeDisposable compositeDisposable;
     private static BaseRepository baseRepository_instance;
+    private String token;
     private BaseRepository(Application application) {
         mutableLiveData = new MutableLiveData<>();
         compositeDisposable = new CompositeDisposable();
-
+        token = SharedPreferencesUtil.getPreferences(shared_preferences_auth, application).getString(access_token, "NO TOKEN");
         BaseComponent component = DaggerBaseComponent.builder()
                 .appComponent(((App) application.getApplicationContext()).getAppComponent())
                 .activityViewModelModule(new ActivityViewModelModule(null))
@@ -57,7 +58,7 @@ public class BaseRepository {
 
 
         userService = retrofit.create(UserService.class);
-        Observable<User>observable = userService.getUser("Bearer " + ACCESS_TOKEN);
+        Observable<User> observable = userService.getUser("Bearer " + token);
         observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
